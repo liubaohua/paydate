@@ -37,6 +37,8 @@ namespace Print
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -45,20 +47,18 @@ namespace Print
             this.tbVendor2 = new System.Windows.Forms.TextBox();
             this.tbPocode2 = new System.Windows.Forms.TextBox();
             this.tbPoCode1 = new System.Windows.Forms.TextBox();
-            this.tbPayTerm1 = new System.Windows.Forms.TextBox();
-            this.tbVendor = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
+            this.tbPayTerm1 = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.dpt6 = new Print.FlatDateTimePicker();
+            this.tbVendor = new System.Windows.Forms.TextBox();
             this.dpt4 = new Print.FlatDateTimePicker();
             this.dpt5 = new Print.FlatDateTimePicker();
+            this.label1 = new System.Windows.Forms.Label();
             this.dpt3 = new Print.FlatDateTimePicker();
             this.dtp2 = new Print.FlatDateTimePicker();
             this.dtp1 = new Print.FlatDateTimePicker();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.dvResult)).BeginInit();
             this.panel1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -83,6 +83,7 @@ namespace Print
             this.dvResult.RowTemplate.Height = 23;
             this.dvResult.Size = new System.Drawing.Size(1067, 430);
             this.dvResult.TabIndex = 1;
+            this.dvResult.Paint += new System.Windows.Forms.PaintEventHandler(this.dvResult_Paint);
             // 
             // panel1
             // 
@@ -154,6 +155,24 @@ namespace Print
             this.label6.TabIndex = 18;
             this.label6.Text = "至";
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(470, 45);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(17, 12);
+            this.label12.TabIndex = 19;
+            this.label12.Text = "至";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(470, 15);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(17, 12);
+            this.label10.TabIndex = 19;
+            this.label10.Text = "至";
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -218,47 +237,21 @@ namespace Print
             this.tbPoCode1.Size = new System.Drawing.Size(127, 21);
             this.tbPoCode1.TabIndex = 11;
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(290, 45);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(53, 12);
+            this.label11.TabIndex = 8;
+            this.label11.Text = "开票日期";
+            // 
             // tbPayTerm1
             // 
             this.tbPayTerm1.Location = new System.Drawing.Point(674, 15);
             this.tbPayTerm1.Name = "tbPayTerm1";
             this.tbPayTerm1.Size = new System.Drawing.Size(127, 21);
             this.tbPayTerm1.TabIndex = 12;
-            // 
-            // tbVendor
-            // 
-            this.tbVendor.Location = new System.Drawing.Point(71, 42);
-            this.tbVendor.Name = "tbVendor";
-            this.tbVendor.Size = new System.Drawing.Size(81, 21);
-            this.tbVendor.TabIndex = 13;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 12);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "付款期间";
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.panel1);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.dvResult);
-            this.splitContainer1.Size = new System.Drawing.Size(1067, 499);
-            this.splitContainer1.SplitterDistance = 65;
-            this.splitContainer1.TabIndex = 3;
             // 
             // label9
             // 
@@ -269,33 +262,6 @@ namespace Print
             this.label9.TabIndex = 8;
             this.label9.Text = "订单日期";
             // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(470, 15);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(17, 12);
-            this.label10.TabIndex = 19;
-            this.label10.Text = "至";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(290, 45);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(53, 12);
-            this.label11.TabIndex = 8;
-            this.label11.Text = "开票日期";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(470, 45);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(17, 12);
-            this.label12.TabIndex = 19;
-            this.label12.Text = "至";
-            // 
             // dpt6
             // 
             this.dpt6.CustomFormat = "yyyy-MM-dd";
@@ -304,6 +270,13 @@ namespace Print
             this.dpt6.Name = "dpt6";
             this.dpt6.Size = new System.Drawing.Size(105, 21);
             this.dpt6.TabIndex = 6;
+            // 
+            // tbVendor
+            // 
+            this.tbVendor.Location = new System.Drawing.Point(71, 42);
+            this.tbVendor.Name = "tbVendor";
+            this.tbVendor.Size = new System.Drawing.Size(81, 21);
+            this.tbVendor.TabIndex = 13;
             // 
             // dpt4
             // 
@@ -322,6 +295,15 @@ namespace Print
             this.dpt5.Name = "dpt5";
             this.dpt5.Size = new System.Drawing.Size(105, 21);
             this.dpt5.TabIndex = 7;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 12);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "付款期间";
             // 
             // dpt3
             // 
@@ -349,6 +331,25 @@ namespace Print
             this.dtp1.Name = "dtp1";
             this.dtp1.Size = new System.Drawing.Size(81, 21);
             this.dtp1.TabIndex = 7;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.panel1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.dvResult);
+            this.splitContainer1.Size = new System.Drawing.Size(1067, 499);
+            this.splitContainer1.SplitterDistance = 65;
+            this.splitContainer1.TabIndex = 3;
             // 
             // Form1
             // 

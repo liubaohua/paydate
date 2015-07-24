@@ -247,20 +247,16 @@ namespace Print
                     }
                     if (!tbVendor.Text.Equals("") && !tbVendor2.Text.Equals(""))
                         condition.Append(" and v.cVencode>='" + tbVendor.Text + "' and v.cVencode<='" + tbVendor2.Text + "' ");
-                    if (!dtp1.Text.Trim().Equals("") && !dtp2.Text.Trim().Equals(""))
-                        condition.Append(" and r1.ddate>='" + String.Format("{0:yyyy-MM-dd}", dtp1.Text) + "' and r1.ddate<='" + String.Format("{0:yyyy-MM-dd}", dtp2.Text) + "' ");
+                    //if (!dtp1.Text.Trim().Equals("") && !dtp2.Text.Trim().Equals(""))
+                        //condition.Append(" and r1.ddate>='" + String.Format("{0:yyyy-MM-dd}", dtp1.Text) + "' and r1.ddate<='" + String.Format("{0:yyyy-MM-dd}", dtp2.Text) + "' ");
                     if (!tbPayTerm1.Text.Equals("") && !tbPayTerm2.Text.Equals(""))
                         condition.Append(" and v.cVenDefine1>='" + tbPayTerm1.Text + "' and v.cVenDefine1<='" + tbPayTerm2.Text + "' ");
                     if (!tbPoCode1.Text.Equals("") && !tbPocode2.Text.Equals(""))
                         condition.Append(" and ph.cPOID>='" + tbPoCode1.Text + "' and ph.cPOID<='" + tbPocode2.Text + "' ");
 
-                    if (condition.Length == 0 && (tbPoCode1.Text.Equals("") || tbPocode2.Text.Equals("")))
-                    {
-                        MessageBox.Show("请您选择查询条件","提示");
-                        return;
-                    }
+          
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendLine("select ph.cPOID,ph.cmaketime,v.cVenName,ph.cexch_name,pb.cInvCode,i.cInvName,i.cInvStd,i.cInvAddCode,cu.cComUnitName,");
+                    sb.AppendLine("select top 100 count(1) over (partition by ph.cPOID) cnt,ph.cPOID,ph.cmaketime,v.cVenName,ph.cexch_name,pb.cInvCode,i.cInvName,i.cInvStd,i.cInvAddCode,cu.cComUnitName,");
                     sb.AppendLine("pb.iQuantity,pb.iTaxPrice,pb.iNatInvMoney,pb.iOriTotal,pb.iTotal,pt.dPBVDate,");
                     sb.AppendLine("v.cVenDefine1 as PayTerm,");
                     sb.AppendLine("(case when v.cVenDefine1='预付款' then ph.cAuditDate ");
@@ -275,8 +271,10 @@ namespace Print
                     sb.AppendLine("inner join Vendor v on v.cVencode = ph.cVencode");
                     sb.AppendLine("inner join (select pvb.iPOsID,max(pvh.dPBVDate) as dPBVDate from PurBillVouchs pvb inner join PurBillVouch pvh on pvh.PBVID = pvb.PBVID group by pvb.iPOsID) pt");
                     sb.AppendLine("on pt.iPOsID= pb.ID");
-                    sb.AppendLine("where pb.iTotal<=pb.iNatInvMoney");
+                  //  sb.AppendLine("where pb.iTotal<=pb.iNatInvMoney");
                     sb.AppendLine(condition.ToString());
+                    //sb.Remove(0, sb.Length);
+                    //sb.Append("select 'ddadaf' as a union all select '22adasfdasf' union all select 'e2890345fsdklgdst' ");
 
 
                     SqlCommand cmdSelect = new SqlCommand(sb.ToString(), this.sqlConnection1);
@@ -285,6 +283,7 @@ namespace Print
                     System.Data.DataTable dt = new System.Data.DataTable();
                     da.Fill(dt);
                     dvResult.DataSource = dt;
+                    
                 }
                 catch (Exception ex)
                 {
@@ -294,6 +293,49 @@ namespace Print
                 {
                     this.sqlConnection1.Close();
                 }
+        }
+
+        private void MergeCells(int RowId1, int RowId2, int Column, bool isSelected, DataGridView dataGrid)
+        {
+            Graphics g = dataGrid.CreateGraphics();
+            Pen gridPen = new Pen(dataGrid.GridColor);
+
+            //Cells Rectangles
+            Rectangle CellRectangle1 = dataGrid.GetCellDisplayRectangle(Column, RowId1, true);
+            Rectangle CellRectangle2 = dataGrid.GetCellDisplayRectangle(Column, RowId2, true);
+
+            int rectHeight = 0;
+            string MergedRows = String.Empty;
+
+            for (int i = RowId1; i <= RowId2; i++)
+            {
+                rectHeight += dataGrid.GetCellDisplayRectangle(Column, i, false).Height;
+            }
+
+            Rectangle newCell = new Rectangle(CellRectangle1.X, CellRectangle1.Y, CellRectangle1.Width, rectHeight);
+
+            g.FillRectangle(new SolidBrush(isSelected ? dataGrid.DefaultCellStyle.SelectionBackColor : dataGrid.DefaultCellStyle.BackColor), newCell);
+
+            g.DrawRectangle(gridPen, newCell);
+
+            g.DrawString(dataGrid.Rows[RowId1].Cells[Column].Value.ToString(), dataGrid.DefaultCellStyle.Font, new SolidBrush(isSelected ? dataGrid.DefaultCellStyle.SelectionForeColor : dataGrid.DefaultCellStyle.ForeColor), newCell.X + newCell.Width / 3, newCell.Y + newCell.Height / 3);
+        }
+
+        private void dvResult_Paint(object sender, PaintEventArgs e)
+        {
+            if (dvResult.Rows.Count > 1)
+            {
+                for (int i = 0; i < dvResult.Rows.Count; )
+                {
+                    int rows = int.Parse(dvResult.Rows[i].Cells["cnt"].Value.ToString());
+                    if (rows>1)
+                    {
+                        MergeCells(i, i + rows, 1, true, dvResult);
+                    }
+                    i = i + rows;
+                }
+            }
+            
         }
     }
 }
