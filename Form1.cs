@@ -239,74 +239,45 @@ namespace Print
         {
                 try
                 {
-                    StringBuilder invcodecond = new StringBuilder();
-                    if (!tbinvcode1.Text.Equals("") && !tbinvcode2.Text.Equals(""))
-                        invcodecond.Append(" and rs1.cinvcode>='" + tbinvcode1.Text + "' and rs1.cinvcode<='" + tbinvcode2.Text + "' ");
+                    StringBuilder condition = new StringBuilder();
+                    if (dtp1.Text.Trim().Equals("") || dtp2.Text.Trim().Equals(""))
+                    {
+                        MessageBox.Show("请您选择付款日期", "提示");
+                        return;
+                    }
+                    if (!tbVendor.Text.Equals("") && !tbVendor2.Text.Equals(""))
+                        condition.Append(" and v.cVencode>='" + tbVendor.Text + "' and v.cVencode<='" + tbVendor2.Text + "' ");
                     if (!dtp1.Text.Trim().Equals("") && !dtp2.Text.Trim().Equals(""))
-                        invcodecond.Append(" and r1.ddate>='" + String.Format("{0:yyyy-MM-dd}", dtp1.Text) + "' and r1.ddate<='" + String.Format("{0:yyyy-MM-dd}", dtp2.Text) + "' ");
-                    if (!tbinvbarcode1.Text.Equals("") && !tbinvbarcode2.Text.Equals(""))
-                        invcodecond.Append(" and rs1.cbarcode>='" + tbinvbarcode1.Text + "' and rs1.cbarcode<='" + tbinvbarcode2.Text + "' ");
+                        condition.Append(" and r1.ddate>='" + String.Format("{0:yyyy-MM-dd}", dtp1.Text) + "' and r1.ddate<='" + String.Format("{0:yyyy-MM-dd}", dtp2.Text) + "' ");
+                    if (!tbPayTerm1.Text.Equals("") && !tbPayTerm2.Text.Equals(""))
+                        condition.Append(" and v.cVenDefine1>='" + tbPayTerm1.Text + "' and v.cVenDefine1<='" + tbPayTerm2.Text + "' ");
+                    if (!tbPoCode1.Text.Equals("") && !tbPocode2.Text.Equals(""))
+                        condition.Append(" and ph.cPOID>='" + tbPoCode1.Text + "' and ph.cPOID<='" + tbPocode2.Text + "' ");
 
-                    if (invcodecond.Length == 0 && (tbinvaddcode1.Text.Equals("") || tbinvaddcode2.Text.Equals("")))
+                    if (condition.Length == 0 && (tbPoCode1.Text.Equals("") || tbPocode2.Text.Equals("")))
                     {
                         MessageBox.Show("请您选择查询条件","提示");
                         return;
                     }
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendLine("select t2.ddate as 日期,t2.cVouchName as 单据类型,t2.cCode 单据号,t2.cwhName 仓库,t2.cinvcode 存货编码,t2.cbarcode 存货条码,t2.cInvAddCode 存货代码,");
-                    sb.AppendLine("t2.cinvname 存货名称,t2.cinvstd 规格型号,t2.cinvccode 存货类别编码,t2.cinvcname 存货类别名称,t2.cComUnitName 主计量单位,t2.inquantity 入库数量,t2.onquantity 出库数量,");
-                    sb.AppendLine("c.cCusName 客户,t2.cmemo 备注,t2.cmaker 制单人,t2.chandler 审核人,t2.dVeriDate 审核日期 from (");
-                    sb.AppendLine("select t.ddate,t.cVouchType,v.cVouchName,t.cCode,w.cwhName,i.cinvcode,t.cbarcode,i.cInvAddCode,");
-                    sb.AppendLine("i.cinvname,i.cinvstd,i.cinvccode,ic.cinvcname,cu.cComUnitName,");
-                    sb.AppendLine("(case when t.bRdFlag=1 then cast(t.iquantity as decimal(18,2)) end) inquantity,");
-                    sb.AppendLine("(case when t.bRdFlag=0 then cast(t.iquantity as decimal(18,2)) end) onquantity,t.cmemo,t.cmaker,t.chandler,t.dVeriDate,t.cCusCode");
-                    sb.AppendLine("from");
-                    sb.AppendLine("(select r1.bRdFlag,r1.ddate,r1.cVouchType,r1.cCode,r1.cCusCode,r1.cwhcode,r1.cmemo,r1.cmaker,r1.chandler,r1.dVeriDate,");
-                    sb.AppendLine("rs1.cinvcode,rs1.cbarcode,rs1.iquantity");
-                    sb.AppendLine("from rdrecord01 r1,rdrecords01 rs1");
-                    sb.AppendLine("where r1.id = rs1.id ");
-                    sb.AppendLine(invcodecond.ToString());
-                    sb.AppendLine("union");
-                    sb.AppendLine("select r1.bRdFlag,r1.ddate,r1.cVouchType,r1.cCode,r1.cCusCode,r1.cwhcode,r1.cmemo,r1.cmaker,r1.chandler,r1.dVeriDate,");
-                    sb.AppendLine("rs1.cinvcode,rs1.cbarcode,rs1.iquantity");
-                    sb.AppendLine("from rdrecord10 r1,rdrecords10 rs1");
-                    sb.AppendLine("where r1.id = rs1.id  ");
-                    sb.AppendLine(invcodecond.ToString());
-                    sb.AppendLine("union");
-                    sb.AppendLine("select r1.bRdFlag,r1.ddate,r1.cVouchType,r1.cCode,r1.cCusCode,r1.cwhcode,r1.cmemo,r1.cmaker,r1.chandler,r1.dVeriDate,");
-                    sb.AppendLine("rs1.cinvcode,rs1.cbarcode,rs1.iquantity");
-                    sb.AppendLine("from rdrecord08 r1,rdrecords08 rs1");
-                    sb.AppendLine("where r1.id = rs1.id  ");
-                    sb.AppendLine(invcodecond.ToString());
-                    sb.AppendLine("union");
-                    sb.AppendLine("select r1.bRdFlag,r1.ddate,r1.cVouchType,r1.cCode,r1.cCusCode,r1.cwhcode,r1.cmemo,r1.cmaker,r1.chandler,r1.dVeriDate,");
-                    sb.AppendLine("rs1.cinvcode,rs1.cbarcode,rs1.iquantity");
-                    sb.AppendLine("from rdrecord11 r1,rdrecords11 rs1");
-                    sb.AppendLine("where r1.id = rs1.id ");
-                    sb.AppendLine(invcodecond.ToString());
-                    sb.AppendLine("union");
-                    sb.AppendLine("select r1.bRdFlag,r1.ddate,r1.cVouchType,r1.cCode,r1.cCusCode,r1.cwhcode,r1.cmemo,r1.cmaker,r1.chandler,r1.dVeriDate,");
-                    sb.AppendLine("rs1.cinvcode,rs1.cbarcode,rs1.iquantity");
-                    sb.AppendLine("from rdrecord32 r1,rdrecords32 rs1");
-                    sb.AppendLine("where r1.id = rs1.id ");
-                    sb.AppendLine(invcodecond.ToString());
-                    sb.AppendLine("union");
-                    sb.AppendLine("select r1.bRdFlag,r1.ddate,r1.cVouchType,r1.cCode,r1.cCusCode,r1.cwhcode,r1.cmemo,r1.cmaker,r1.chandler,r1.dVeriDate,");
-                    sb.AppendLine("rs1.cinvcode,rs1.cbarcode,rs1.iquantity");
-                    sb.AppendLine("from rdrecord09 r1,rdrecords09 rs1");
-                    sb.AppendLine("where r1.id = rs1.id");
-                    sb.AppendLine(invcodecond.ToString());
-                    sb.AppendLine(") t,warehouse w,inventory i,inventoryclass ic,ComputationUnit cu,VouchType v ");
-                    sb.AppendLine("where w.cwhcode = t.cwhcode and i.cinvcode=t.cinvcode");
-                    sb.AppendLine("and ic.cinvccode = i.cinvccode and cu.cComunitCode  = i.cComUnitCode and v.cVouchType = t.cVouchType");
-                    
-                    if (!tbinvaddcode1.Text.Equals("") && !tbinvaddcode2.Text.Equals(""))
-                        sb.Append(" and i.cInvAddCode>='" + tbinvaddcode1.Text + "' and i.cInvAddCode<='" + tbinvaddcode2.Text + "' ");
+                    sb.AppendLine("select ph.cPOID,ph.cmaketime,v.cVenName,ph.cexch_name,pb.cInvCode,i.cInvName,i.cInvStd,i.cInvAddCode,cu.cComUnitName,");
+                    sb.AppendLine("pb.iQuantity,pb.iTaxPrice,pb.iNatInvMoney,pb.iOriTotal,pb.iTotal,pt.dPBVDate,");
+                    sb.AppendLine("v.cVenDefine1 as PayTerm,");
+                    sb.AppendLine("(case when v.cVenDefine1='预付款' then ph.cAuditDate ");
+                    sb.AppendLine("when v.cVenDefine1='见票付款' then pt.dPBVDate ");
+                    sb.AppendLine("when v.cVenDefine1='月结30天' then pt.dPBVDate+30");
+                    sb.AppendLine("when v.cVenDefine1='月结60天' then pt.dPBVDate+60");
+                    sb.AppendLine("end ) as PayDate,");
+                    sb.AppendLine("ph.cmaker ");
+                    sb.AppendLine("from PO_Pomain ph inner join Po_PoDetails pb on ph.POID=pb.POID");
+                    sb.AppendLine("inner join Inventory i on pb.cInvCode = i.cInvCode");
+                    sb.AppendLine("inner join ComputationUnit cu on cu.cComunitCode  = i.cComUnitCode");
+                    sb.AppendLine("inner join Vendor v on v.cVencode = ph.cVencode");
+                    sb.AppendLine("inner join (select pvb.iPOsID,max(pvh.dPBVDate) as dPBVDate from PurBillVouchs pvb inner join PurBillVouch pvh on pvh.PBVID = pvb.PBVID group by pvb.iPOsID) pt");
+                    sb.AppendLine("on pt.iPOsID= pb.ID");
+                    sb.AppendLine("where pb.iTotal<=pb.iNatInvMoney");
+                    sb.AppendLine(condition.ToString());
 
-                    sb.AppendLine(") t2");
-                    sb.AppendLine("left join Customer c");
-                    sb.AppendLine("on c.cCuscode=t2.cCuscode ");
-                    sb.AppendLine("");
 
                     SqlCommand cmdSelect = new SqlCommand(sb.ToString(), this.sqlConnection1);
                     this.sqlConnection1.Open();
