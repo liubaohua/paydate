@@ -17,6 +17,7 @@ using System.Xml.Serialization;
 using System.Threading;
 //using Microsoft.Office.Core;
 using Microsoft.Office;
+using Microsoft.Reporting.WinForms;
 
 namespace Print
 {
@@ -256,7 +257,7 @@ namespace Print
 
           
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendLine("select top 100 count(1) over (partition by ph.cPOID) cnt,ph.cPOID,ph.cmaketime,v.cVenName,ph.cexch_name,pb.cInvCode,i.cInvName,i.cInvStd,i.cInvAddCode,cu.cComUnitName,");
+                    sb.AppendLine("select row_number() over (order by aa.cPOID) as 序号,aa.* from (select top 100 count(1) over (partition by ph.cPOID) cnt,ph.cPOID,ph.cmaketime,v.cVenName,ph.cexch_name,pb.cInvCode,i.cInvName,i.cInvStd,i.cInvAddCode,cu.cComUnitName,");
                     sb.AppendLine("pb.iQuantity,pb.iTaxPrice,pb.iNatInvMoney,pb.iOriTotal,pb.iTotal,pt.dPBVDate,");
                     sb.AppendLine("v.cVenDefine1 as PayTerm,");
                     sb.AppendLine("(case when v.cVenDefine1='预付款' then ph.cAuditDate ");
@@ -270,11 +271,11 @@ namespace Print
                     sb.AppendLine("inner join ComputationUnit cu on cu.cComunitCode  = i.cComUnitCode");
                     sb.AppendLine("inner join Vendor v on v.cVencode = ph.cVencode");
                     sb.AppendLine("inner join (select pvb.iPOsID,max(pvh.dPBVDate) as dPBVDate from PurBillVouchs pvb inner join PurBillVouch pvh on pvh.PBVID = pvb.PBVID group by pvb.iPOsID) pt");
-                    sb.AppendLine("on pt.iPOsID= pb.ID");
+                    sb.AppendLine("on pt.iPOsID= pb.ID ) aa");
                   //  sb.AppendLine("where pb.iTotal<=pb.iNatInvMoney");
                     sb.AppendLine(condition.ToString());
-                    //sb.Remove(0, sb.Length);
-                    //sb.Append("select 'ddadaf' as a union all select '22adasfdasf' union all select 'e2890345fsdklgdst' ");
+                    sb.Remove(0, sb.Length);
+                    sb.Append("select 'ddadaf' as a union all select '22adasfdasf' union all select 'e2890345fsdklgdst' ");
 
 
                     SqlCommand cmdSelect = new SqlCommand(sb.ToString(), this.sqlConnection1);
@@ -283,7 +284,41 @@ namespace Print
                     System.Data.DataTable dt = new System.Data.DataTable();
                     da.Fill(dt);
                     dvResult.DataSource = dt;
+
+
+
+                    this.reportViewer1.ProcessingMode = ProcessingMode.Local;
+                    this.reportViewer1.LocalReport.ReportPath = "Report1.rdlc";
+                    this.reportViewer1.LocalReport.ReportEmbeddedResource = "Print.Report1.rdlc";
+                    this.reportViewer1.LocalReport.EnableExternalImages = true;
+
+                    List<ReportParameter> para = new List<ReportParameter>();
+                    //这里是添加两个字段
+                    para.Add(new ReportParameter("FishName", "fishkel"));
+                    para.Add(new ReportParameter("FishId", "123"));
+                    //这里是添加两个数据源，两个list
+                    var list = new List<TestReport> { };
+                    list.Add(new TestReport() { a = "20100201", b = 0.1, c = 0.2, d = 0.1 });
+                    list.Add(new TestReport() { a = "20100202", b = 0.1, c = 0.2, d = 0.2 });
+                    list.Add(new TestReport() { a = "20100203", b = 0.1, c = 0.4, d = 0.2 });
+                    var test = new List<TestReport>() { new TestReport() { a = "20100201", b = 0.33, c = 0.33, d = 0.33 } };
+                    ReportDataSource reportDataSource = new ReportDataSource();
+                    reportDataSource.Name = "DataSet1";
+                    reportDataSource.Value = test;
+
+
+                    this.reportViewer1.LocalReport.DataSources.Add(reportDataSource);
+                    //this.reportViewer1.LocalReport.DataSources.Add(new ReportDataSource("TestList", list));
+                    this.reportViewer1.LocalReport.SetParameters(para);
+                    this.reportViewer1.RefreshReport();
                     
+
+
+
+
+                
+
+
                 }
                 catch (Exception ex)
                 {
@@ -294,6 +329,10 @@ namespace Print
                     this.sqlConnection1.Close();
                 }
         }
+
+
+
+
 
         private void MergeCells(int RowId1, int RowId2, int Column, bool isSelected, DataGridView dataGrid)
         {
@@ -323,19 +362,87 @@ namespace Print
 
         private void dvResult_Paint(object sender, PaintEventArgs e)
         {
-            if (dvResult.Rows.Count > 1)
+            if (dvResult.Rows.Count > 1&&false)
             {
+                dvResult.Columns["cPOID"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["序号"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cmaketime"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cVenName"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cexch_name"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cInvCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cInvName"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cInvStd"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cInvAddCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cComUnitName"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["iQuantity"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["iTaxPrice"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["iNatInvMoney"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["iOriTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["iTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["dPBVDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["PayTerm"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["PayDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cmaker"].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                
+
+                dvResult.Columns["cPOID"].HeaderText = "订单号";
+                dvResult.Columns["cmaketime"].HeaderText = "制单时间";
+                dvResult.Columns["cVenName"].HeaderText = "供应商";
+                dvResult.Columns["cexch_name"].HeaderText = "币种";
+                dvResult.Columns["cInvCode"].HeaderText = "存货编码";
+                dvResult.Columns["cInvName"].HeaderText = "存货名称";
+                dvResult.Columns["cInvStd"].HeaderText = "规格";
+                dvResult.Columns["cInvAddCode"].HeaderText = "存货代码";
+                dvResult.Columns["cComUnitName"].HeaderText = "单位";
+                dvResult.Columns["iQuantity"].HeaderText = "数量";
+                dvResult.Columns["iTaxPrice"].HeaderText = "累计原币发票金额";
+                dvResult.Columns["iNatInvMoney"].HeaderText = "累计本币发票金额";
+                dvResult.Columns["iOriTotal"].HeaderText = "累计原币付款";
+                dvResult.Columns["iTotal"].HeaderText = "累计本币付款";
+                dvResult.Columns["dPBVDate"].HeaderText = "开票日期";
+                dvResult.Columns["PayTerm"].HeaderText = "付款条件";
+                dvResult.Columns["PayDate"].HeaderText = "付款日期";
+                dvResult.Columns["cmaker"].HeaderText = "订单制单人";
+                 
                 for (int i = 0; i < dvResult.Rows.Count; )
                 {
                     int rows = int.Parse(dvResult.Rows[i].Cells["cnt"].Value.ToString());
                     if (rows>1)
                     {
-                        MergeCells(i, i + rows, 1, true, dvResult);
+                        MergeCells(i, i + rows - 1, 1, false, dvResult);
+                        MergeCells(i, i + rows - 1, 2, false, dvResult);
+                        MergeCells(i, i + rows - 1, 3, false, dvResult);
+                        MergeCells(i, i + rows - 1, 4, false, dvResult);
                     }
                     i = i + rows;
                 }
+                if (dvResult.Columns["cnt"].Visible)
+                    dvResult.Columns["cnt"].Visible = false;
             }
             
         }
+
+        private void dvResult_Sorted(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+            this.reportViewer1.RefreshReport();
+        }
     }
+
+
+    public class TestReport
+    {
+        public string a { get; set; }
+        public double b { get; set; }
+        public double c { get; set; }
+        public double d { get; set; }
+    }
+
+
 }

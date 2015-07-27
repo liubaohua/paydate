@@ -29,7 +29,10 @@ namespace Print
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            Microsoft.Reporting.WinForms.ReportDataSource reportDataSource1 = new Microsoft.Reporting.WinForms.ReportDataSource();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            this.TestReportBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.sqlConnection1 = new System.Data.SqlClient.SqlConnection();
             this.dvResult = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -50,21 +53,29 @@ namespace Print
             this.label11 = new System.Windows.Forms.Label();
             this.tbPayTerm1 = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.dpt6 = new Print.FlatDateTimePicker();
             this.tbVendor = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.reportViewer1 = new Microsoft.Reporting.WinForms.ReportViewer();
+            this.dpt6 = new Print.FlatDateTimePicker();
             this.dpt4 = new Print.FlatDateTimePicker();
             this.dpt5 = new Print.FlatDateTimePicker();
-            this.label1 = new System.Windows.Forms.Label();
             this.dpt3 = new Print.FlatDateTimePicker();
             this.dtp2 = new Print.FlatDateTimePicker();
             this.dtp1 = new Print.FlatDateTimePicker();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.testReportBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.TestReportBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dvResult)).BeginInit();
             this.panel1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.testReportBindingSource1)).BeginInit();
             this.SuspendLayout();
+            // 
+            // TestReportBindingSource
+            // 
+            this.TestReportBindingSource.DataMember = "TestReport";
             // 
             // sqlConnection1
             // 
@@ -83,6 +94,7 @@ namespace Print
             this.dvResult.RowTemplate.Height = 23;
             this.dvResult.Size = new System.Drawing.Size(1067, 430);
             this.dvResult.TabIndex = 1;
+            this.dvResult.Sorted += new System.EventHandler(this.dvResult_Sorted);
             this.dvResult.Paint += new System.Windows.Forms.PaintEventHandler(this.dvResult_Paint);
             // 
             // panel1
@@ -262,6 +274,53 @@ namespace Print
             this.label9.TabIndex = 8;
             this.label9.Text = "订单日期";
             // 
+            // tbVendor
+            // 
+            this.tbVendor.Location = new System.Drawing.Point(71, 42);
+            this.tbVendor.Name = "tbVendor";
+            this.tbVendor.Size = new System.Drawing.Size(81, 21);
+            this.tbVendor.TabIndex = 13;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 12);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "付款期间";
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.panel1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.reportViewer1);
+            this.splitContainer1.Panel2.Controls.Add(this.dvResult);
+            this.splitContainer1.Size = new System.Drawing.Size(1067, 499);
+            this.splitContainer1.SplitterDistance = 65;
+            this.splitContainer1.TabIndex = 3;
+            // 
+            // reportViewer1
+            // 
+            reportDataSource1.Name = "DataSet1";
+            reportDataSource1.Value = this.TestReportBindingSource;
+            this.reportViewer1.LocalReport.DataSources.Add(reportDataSource1);
+            this.reportViewer1.LocalReport.ReportEmbeddedResource = "Print.Report1.rdlc";
+            this.reportViewer1.Location = new System.Drawing.Point(187, 91);
+            this.reportViewer1.Name = "reportViewer1";
+            this.reportViewer1.Size = new System.Drawing.Size(396, 246);
+            this.reportViewer1.TabIndex = 2;
+            // 
             // dpt6
             // 
             this.dpt6.CustomFormat = "yyyy-MM-dd";
@@ -270,13 +329,6 @@ namespace Print
             this.dpt6.Name = "dpt6";
             this.dpt6.Size = new System.Drawing.Size(105, 21);
             this.dpt6.TabIndex = 6;
-            // 
-            // tbVendor
-            // 
-            this.tbVendor.Location = new System.Drawing.Point(71, 42);
-            this.tbVendor.Name = "tbVendor";
-            this.tbVendor.Size = new System.Drawing.Size(81, 21);
-            this.tbVendor.TabIndex = 13;
             // 
             // dpt4
             // 
@@ -295,15 +347,6 @@ namespace Print
             this.dpt5.Name = "dpt5";
             this.dpt5.Size = new System.Drawing.Size(105, 21);
             this.dpt5.TabIndex = 7;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 12);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "付款期间";
             // 
             // dpt3
             // 
@@ -332,24 +375,9 @@ namespace Print
             this.dtp1.Size = new System.Drawing.Size(81, 21);
             this.dtp1.TabIndex = 7;
             // 
-            // splitContainer1
+            // testReportBindingSource1
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.panel1);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.dvResult);
-            this.splitContainer1.Size = new System.Drawing.Size(1067, 499);
-            this.splitContainer1.SplitterDistance = 65;
-            this.splitContainer1.TabIndex = 3;
+            this.testReportBindingSource1.DataSource = typeof(Print.TestReport);
             // 
             // Form1
             // 
@@ -361,13 +389,16 @@ namespace Print
             this.KeyPreview = true;
             this.Name = "Form1";
             this.Text = "付款日期查询";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            ((System.ComponentModel.ISupportInitialize)(this.TestReportBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dvResult)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.testReportBindingSource1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -402,6 +433,9 @@ namespace Print
         private System.Windows.Forms.Label label11;
         private FlatDateTimePicker dpt6;
         private FlatDateTimePicker dpt5;
+        private Microsoft.Reporting.WinForms.ReportViewer reportViewer1;
+        private System.Windows.Forms.BindingSource TestReportBindingSource;
+        private System.Windows.Forms.BindingSource testReportBindingSource1;
 
     }
 }
