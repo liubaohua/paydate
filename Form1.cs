@@ -25,8 +25,16 @@ namespace Print
     {
         public Form1()
         {
-            InitializeComponent();
-            InitDatabaseSetting();
+            try
+            {
+                InitializeComponent();
+                InitDatabaseSetting();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message+"\n"+e.StackTrace,"");
+            }
+           
         }
 
         private System.Data.SqlClient.SqlConnection sqlConnection1;
@@ -235,6 +243,10 @@ namespace Print
             }
             
         }
+        private void button2_Click(object sender, EventArgs e)
+        {
+        }
+
 
         private void btQry_Click(object sender, EventArgs e)
         {
@@ -274,8 +286,8 @@ namespace Print
                     sb.AppendLine("on pt.iPOsID= pb.ID ) aa");
                   //  sb.AppendLine("where pb.iTotal<=pb.iNatInvMoney");
                     sb.AppendLine(condition.ToString());
-                    sb.Remove(0, sb.Length);
-                    sb.Append("select 'ddadaf' as a union all select '22adasfdasf' union all select 'e2890345fsdklgdst' ");
+                    //sb.Remove(0, sb.Length);
+                    //sb.Append("select 'ddadaf' as a union all select '22adasfdasf' union all select 'e2890345fsdklgdst' ");
 
 
                     SqlCommand cmdSelect = new SqlCommand(sb.ToString(), this.sqlConnection1);
@@ -283,41 +295,47 @@ namespace Print
                     SqlDataAdapter da = new SqlDataAdapter(cmdSelect);
                     System.Data.DataTable dt = new System.Data.DataTable();
                     da.Fill(dt);
-                    dvResult.DataSource = dt;
+                  //  dvResult.DataSource = dt;
 
+                    
 
-
-                    this.reportViewer1.ProcessingMode = ProcessingMode.Local;
+                    this.reportViewer1.Reset();
+                    this.reportViewer1.LocalReport.DataSources.Clear();
                     this.reportViewer1.LocalReport.ReportPath = "Report1.rdlc";
                     this.reportViewer1.LocalReport.ReportEmbeddedResource = "Print.Report1.rdlc";
-                    this.reportViewer1.LocalReport.EnableExternalImages = true;
-
-                    List<ReportParameter> para = new List<ReportParameter>();
-                    //这里是添加两个字段
-                    para.Add(new ReportParameter("FishName", "fishkel"));
-                    para.Add(new ReportParameter("FishId", "123"));
-                    //这里是添加两个数据源，两个list
-                    var list = new List<TestReport> { };
-                    list.Add(new TestReport() { a = "20100201", b = 0.1, c = 0.2, d = 0.1 });
-                    list.Add(new TestReport() { a = "20100202", b = 0.1, c = 0.2, d = 0.2 });
-                    list.Add(new TestReport() { a = "20100203", b = 0.1, c = 0.4, d = 0.2 });
-                    var test = new List<TestReport>() { new TestReport() { a = "20100201", b = 0.33, c = 0.33, d = 0.33 } };
-                    ReportDataSource reportDataSource = new ReportDataSource();
-                    reportDataSource.Name = "DataSet1";
-                    reportDataSource.Value = test;
-
-
-                    this.reportViewer1.LocalReport.DataSources.Add(reportDataSource);
-                    //this.reportViewer1.LocalReport.DataSources.Add(new ReportDataSource("TestList", list));
-                    this.reportViewer1.LocalReport.SetParameters(para);
+                    ReportDataSource rds = new ReportDataSource("ds", dt); //ReportDataSource数据源的第一个参数必须与你添加的dataset的名字相同
+                    this.reportViewer1.LocalReport.DataSources.Add(rds);  //添加数据源
+                    this.reportViewer1.ZoomMode = ZoomMode.Percent;
                     this.reportViewer1.RefreshReport();
                     
 
 
 
+                    //this.reportViewer1.ProcessingMode = ProcessingMode.Local;
+                    //this.reportViewer1.LocalReport.ReportPath = "Report1.rdlc";
+                    //this.reportViewer1.LocalReport.ReportEmbeddedResource = "Print.Report1.rdlc";
+                    //this.reportViewer1.LocalReport.EnableExternalImages = true;
 
-                
+                    //List<ReportParameter> para = new List<ReportParameter>();
+                    ////这里是添加两个字段
+                    //para.Add(new ReportParameter("FishName", "fishkel"));
+                    //para.Add(new ReportParameter("FishId", "123"));
+                    ////这里是添加两个数据源，两个list
+                    //var list = new List<TestReport> { };
+                    //list.Add(new TestReport() { a = "20100201", b = 0.1, c = 0.2, d = 0.1 });
+                    //list.Add(new TestReport() { a = "20100202", b = 0.1, c = 0.2, d = 0.2 });
+                    //list.Add(new TestReport() { a = "20100203", b = 0.1, c = 0.4, d = 0.2 });
+                    //var test = new List<TestReport>() { new TestReport() { a = "20100201", b = 0.33, c = 0.33, d = 0.33 } };
+                    //ReportDataSource reportDataSource = new ReportDataSource();
+                    //reportDataSource.Name = "DataSet1";
+                    //reportDataSource.Value = test;
 
+
+                    //this.reportViewer1.LocalReport.DataSources.Add(reportDataSource);
+                    ////this.reportViewer1.LocalReport.DataSources.Add(new ReportDataSource("TestList", list));
+                    //this.reportViewer1.LocalReport.SetParameters(para);
+                    //this.reportViewer1.RefreshReport();
+                    
 
                 }
                 catch (Exception ex)
@@ -362,64 +380,64 @@ namespace Print
 
         private void dvResult_Paint(object sender, PaintEventArgs e)
         {
-            if (dvResult.Rows.Count > 1&&false)
-            {
-                dvResult.Columns["cPOID"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["序号"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cmaketime"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cVenName"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cexch_name"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cInvCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cInvName"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cInvStd"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cInvAddCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cComUnitName"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["iQuantity"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["iTaxPrice"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["iNatInvMoney"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["iOriTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["iTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["dPBVDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["PayTerm"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["PayDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cmaker"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //if (dvResult.Rows.Count > 1&&false)
+            //{
+            //    dvResult.Columns["cPOID"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["序号"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cmaketime"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cVenName"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cexch_name"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cInvCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cInvName"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cInvStd"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cInvAddCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cComUnitName"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["iQuantity"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["iTaxPrice"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["iNatInvMoney"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["iOriTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["iTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["dPBVDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["PayTerm"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["PayDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cmaker"].SortMode = DataGridViewColumnSortMode.NotSortable;
 
                 
 
-                dvResult.Columns["cPOID"].HeaderText = "订单号";
-                dvResult.Columns["cmaketime"].HeaderText = "制单时间";
-                dvResult.Columns["cVenName"].HeaderText = "供应商";
-                dvResult.Columns["cexch_name"].HeaderText = "币种";
-                dvResult.Columns["cInvCode"].HeaderText = "存货编码";
-                dvResult.Columns["cInvName"].HeaderText = "存货名称";
-                dvResult.Columns["cInvStd"].HeaderText = "规格";
-                dvResult.Columns["cInvAddCode"].HeaderText = "存货代码";
-                dvResult.Columns["cComUnitName"].HeaderText = "单位";
-                dvResult.Columns["iQuantity"].HeaderText = "数量";
-                dvResult.Columns["iTaxPrice"].HeaderText = "累计原币发票金额";
-                dvResult.Columns["iNatInvMoney"].HeaderText = "累计本币发票金额";
-                dvResult.Columns["iOriTotal"].HeaderText = "累计原币付款";
-                dvResult.Columns["iTotal"].HeaderText = "累计本币付款";
-                dvResult.Columns["dPBVDate"].HeaderText = "开票日期";
-                dvResult.Columns["PayTerm"].HeaderText = "付款条件";
-                dvResult.Columns["PayDate"].HeaderText = "付款日期";
-                dvResult.Columns["cmaker"].HeaderText = "订单制单人";
+            //    dvResult.Columns["cPOID"].HeaderText = "订单号";
+            //    dvResult.Columns["cmaketime"].HeaderText = "制单时间";
+            //    dvResult.Columns["cVenName"].HeaderText = "供应商";
+            //    dvResult.Columns["cexch_name"].HeaderText = "币种";
+            //    dvResult.Columns["cInvCode"].HeaderText = "存货编码";
+            //    dvResult.Columns["cInvName"].HeaderText = "存货名称";
+            //    dvResult.Columns["cInvStd"].HeaderText = "规格";
+            //    dvResult.Columns["cInvAddCode"].HeaderText = "存货代码";
+            //    dvResult.Columns["cComUnitName"].HeaderText = "单位";
+            //    dvResult.Columns["iQuantity"].HeaderText = "数量";
+            //    dvResult.Columns["iTaxPrice"].HeaderText = "累计原币发票金额";
+            //    dvResult.Columns["iNatInvMoney"].HeaderText = "累计本币发票金额";
+            //    dvResult.Columns["iOriTotal"].HeaderText = "累计原币付款";
+            //    dvResult.Columns["iTotal"].HeaderText = "累计本币付款";
+            //    dvResult.Columns["dPBVDate"].HeaderText = "开票日期";
+            //    dvResult.Columns["PayTerm"].HeaderText = "付款条件";
+            //    dvResult.Columns["PayDate"].HeaderText = "付款日期";
+            //    dvResult.Columns["cmaker"].HeaderText = "订单制单人";
                  
-                for (int i = 0; i < dvResult.Rows.Count; )
-                {
-                    int rows = int.Parse(dvResult.Rows[i].Cells["cnt"].Value.ToString());
-                    if (rows>1)
-                    {
-                        MergeCells(i, i + rows - 1, 1, false, dvResult);
-                        MergeCells(i, i + rows - 1, 2, false, dvResult);
-                        MergeCells(i, i + rows - 1, 3, false, dvResult);
-                        MergeCells(i, i + rows - 1, 4, false, dvResult);
-                    }
-                    i = i + rows;
-                }
-                if (dvResult.Columns["cnt"].Visible)
-                    dvResult.Columns["cnt"].Visible = false;
-            }
+            //    for (int i = 0; i < dvResult.Rows.Count; )
+            //    {
+            //        int rows = int.Parse(dvResult.Rows[i].Cells["cnt"].Value.ToString());
+            //        if (rows>1)
+            //        {
+            //            MergeCells(i, i + rows - 1, 1, false, dvResult);
+            //            MergeCells(i, i + rows - 1, 2, false, dvResult);
+            //            MergeCells(i, i + rows - 1, 3, false, dvResult);
+            //            MergeCells(i, i + rows - 1, 4, false, dvResult);
+            //        }
+            //        i = i + rows;
+            //    }
+            //    if (dvResult.Columns["cnt"].Visible)
+            //        dvResult.Columns["cnt"].Visible = false;
+            //}
             
         }
 
@@ -432,6 +450,11 @@ namespace Print
         {
 
             this.reportViewer1.RefreshReport();
+        }
+
+        private void reportViewer1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 

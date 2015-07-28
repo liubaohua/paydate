@@ -31,7 +31,6 @@ namespace Print
         private Pen BorderPen  = new Pen(Color.Black, 2);
          private Pen BorderPenControl  = new Pen(SystemColors.ControlDark, 2);
          private bool DroppedDown = false;
-         private int InvalidateSince = 0;
          private static int DropDownButtonWidth = 17;
  
         static FlatDateTimePicker()
@@ -141,7 +140,7 @@ namespace Print
          }
          protected override void OnDropDown(EventArgs eventargs)
          {
-             InvalidateSince = 0;
+           //  InvalidateSince = 0;
              DroppedDown = true;
              base.OnDropDown (eventargs);
          }

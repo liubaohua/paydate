@@ -34,7 +34,6 @@ namespace Print
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.TestReportBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.sqlConnection1 = new System.Data.SqlClient.SqlConnection();
-            this.dvResult = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btQry = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
@@ -65,7 +64,6 @@ namespace Print
             this.dtp1 = new Print.FlatDateTimePicker();
             this.testReportBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.TestReportBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dvResult)).BeginInit();
             this.panel1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -80,22 +78,6 @@ namespace Print
             // sqlConnection1
             // 
             this.sqlConnection1.FireInfoMessageEventOnUserErrors = false;
-            // 
-            // dvResult
-            // 
-            this.dvResult.AllowUserToAddRows = false;
-            this.dvResult.AllowUserToDeleteRows = false;
-            this.dvResult.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
-            this.dvResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dvResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dvResult.Location = new System.Drawing.Point(0, 0);
-            this.dvResult.Name = "dvResult";
-            this.dvResult.ReadOnly = true;
-            this.dvResult.RowTemplate.Height = 23;
-            this.dvResult.Size = new System.Drawing.Size(1067, 430);
-            this.dvResult.TabIndex = 1;
-            this.dvResult.Sorted += new System.EventHandler(this.dvResult_Sorted);
-            this.dvResult.Paint += new System.Windows.Forms.PaintEventHandler(this.dvResult_Paint);
             // 
             // panel1
             // 
@@ -132,7 +114,7 @@ namespace Print
             // 
             // btQry
             // 
-            this.btQry.Location = new System.Drawing.Point(969, 20);
+            this.btQry.Location = new System.Drawing.Point(969, 21);
             this.btQry.Name = "btQry";
             this.btQry.Size = new System.Drawing.Size(86, 34);
             this.btQry.TabIndex = 5;
@@ -305,21 +287,22 @@ namespace Print
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.reportViewer1);
-            this.splitContainer1.Panel2.Controls.Add(this.dvResult);
             this.splitContainer1.Size = new System.Drawing.Size(1067, 499);
             this.splitContainer1.SplitterDistance = 65;
             this.splitContainer1.TabIndex = 3;
             // 
             // reportViewer1
             // 
-            reportDataSource1.Name = "DataSet1";
+            this.reportViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            reportDataSource1.Name = "ds";
             reportDataSource1.Value = this.TestReportBindingSource;
             this.reportViewer1.LocalReport.DataSources.Add(reportDataSource1);
-            this.reportViewer1.LocalReport.ReportEmbeddedResource = "Print.Report1.rdlc";
-            this.reportViewer1.Location = new System.Drawing.Point(187, 91);
+            //this.reportViewer1.LocalReport.ReportEmbeddedResource = "Print.Report1.rdlc";
+            this.reportViewer1.Location = new System.Drawing.Point(0, 0);
             this.reportViewer1.Name = "reportViewer1";
-            this.reportViewer1.Size = new System.Drawing.Size(396, 246);
+            this.reportViewer1.Size = new System.Drawing.Size(1067, 430);
             this.reportViewer1.TabIndex = 2;
+            this.reportViewer1.Load += new System.EventHandler(this.reportViewer1_Load);
             // 
             // dpt6
             // 
@@ -392,7 +375,6 @@ namespace Print
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.TestReportBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dvResult)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -405,7 +387,6 @@ namespace Print
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dvResult;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btQry;
         private System.Windows.Forms.Label label8;
