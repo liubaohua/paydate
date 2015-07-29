@@ -30,7 +30,6 @@ namespace Print
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Microsoft.Reporting.WinForms.ReportDataSource reportDataSource1 = new Microsoft.Reporting.WinForms.ReportDataSource();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.TestReportBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.sqlConnection1 = new System.Data.SqlClient.SqlConnection();
@@ -55,7 +54,7 @@ namespace Print
             this.tbVendor = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.reportViewer1 = new Microsoft.Reporting.WinForms.ReportViewer();
+            this.dvResult = new System.Windows.Forms.DataGridView();
             this.dpt6 = new Print.FlatDateTimePicker();
             this.dpt4 = new Print.FlatDateTimePicker();
             this.dpt5 = new Print.FlatDateTimePicker();
@@ -68,6 +67,7 @@ namespace Print
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dvResult)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.testReportBindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -288,6 +288,7 @@ namespace Print
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -298,22 +299,24 @@ namespace Print
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.reportViewer1);
+            this.splitContainer1.Panel2.Controls.Add(this.dvResult);
             this.splitContainer1.Size = new System.Drawing.Size(1092, 499);
             this.splitContainer1.SplitterDistance = 65;
             this.splitContainer1.TabIndex = 3;
             // 
-            // reportViewer1
+            // dvResult
             // 
-            this.reportViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            reportDataSource1.Name = "ds";
-            reportDataSource1.Value = this.TestReportBindingSource;
-            this.reportViewer1.LocalReport.DataSources.Add(reportDataSource1);
-            this.reportViewer1.Location = new System.Drawing.Point(0, 0);
-            this.reportViewer1.Name = "reportViewer1";
-            this.reportViewer1.Size = new System.Drawing.Size(1092, 430);
-            this.reportViewer1.TabIndex = 2;
-            this.reportViewer1.Load += new System.EventHandler(this.reportViewer1_Load);
+            this.dvResult.AllowUserToAddRows = false;
+            this.dvResult.AllowUserToDeleteRows = false;
+            this.dvResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dvResult.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dvResult.Location = new System.Drawing.Point(0, 0);
+            this.dvResult.Name = "dvResult";
+            this.dvResult.ReadOnly = true;
+            this.dvResult.RowTemplate.Height = 23;
+            this.dvResult.Size = new System.Drawing.Size(1092, 430);
+            this.dvResult.TabIndex = 0;
+            this.dvResult.Paint += new System.Windows.Forms.PaintEventHandler(this.dvResult_Paint);
             // 
             // dpt6
             // 
@@ -391,6 +394,7 @@ namespace Print
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dvResult)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.testReportBindingSource1)).EndInit();
             this.ResumeLayout(false);
 
@@ -423,11 +427,11 @@ namespace Print
         private System.Windows.Forms.Label label11;
         private FlatDateTimePicker dpt6;
         private FlatDateTimePicker dpt5;
-        private Microsoft.Reporting.WinForms.ReportViewer reportViewer1;
         private System.Windows.Forms.BindingSource TestReportBindingSource;
         private System.Windows.Forms.BindingSource testReportBindingSource1;
         private System.Windows.Forms.ComboBox cbPayTerm1;
         private System.Windows.Forms.ComboBox cbPayTerm2;
+        private System.Windows.Forms.DataGridView dvResult;
 
     }
 }

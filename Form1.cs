@@ -287,13 +287,36 @@ namespace Print
 
           
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendLine("select row_number() over (order by aa.cPOID) as 序号,aa.* from (select ph.cPOID,ph.dpodate as cmaketime,v.cVenName,ph.cexch_name,pb.cInvCode,i.cInvName,i.cInvStd,i.cInvAddCode,cu.cComUnitName,");
-                    sb.AppendLine("pb.iQuantity,pb.iMoney,pb.iSum,pb.iNatMoney,pb.iNatSum,pb.iTaxPrice,pb.iNatInvMoney,pb.iOriTotal,pb.iTotal,pt.dPBVDate,");
+                    sb.AppendLine("select row_number() over (order by aa.cPOID) as 序号,aa.* from (select count(1) over (partition by ph.cPOID) as cnt, ph.cPOID,CONVERT(nvarchar(30), ph.dpodate, 112) as cmaketime,v.cVenName,ph.cexch_name,pb.cInvCode,i.cInvName,i.cInvStd,i.cInvAddCode,cu.cComUnitName,");
+                    sb.AppendLine("cast(pb.iQuantity as decimal(18,2)) as iQuantity,");
+                    sb.AppendLine("cast(pb.iMoney as decimal(18,2)) as iMoney,");
+                    sb.AppendLine("cast(pb.iSum as decimal(18,2)) as iSum,");
+                    sb.AppendLine("cast(pb.iNatMoney as decimal(18,2)) as iNatMoney,");
+                    sb.AppendLine("cast(pb.iNatSum as decimal(18,2)) as iNatSum,");
+
+                    sb.AppendLine("cast(sum(pb.iMoney) over (partition by ph.cPOID)  as decimal(18,2)) as iMoney_Total,");
+                    sb.AppendLine("cast(sum(pb.iSum) over (partition by ph.cPOID)  as decimal(18,2)) as iSum_Total,");
+                    sb.AppendLine("cast(sum(pb.iNatMoney) over (partition by ph.cPOID)  as decimal(18,2)) as iNatMoney_Total,");
+                    sb.AppendLine("cast(sum(pb.iNatSum) over (partition by ph.cPOID)  as decimal(18,2)) as iNatSum_Total,");
+
+
+                    sb.AppendLine("cast(pb.iTaxPrice as decimal(18,2)) as iTaxPrice,");
+                    sb.AppendLine("cast(pb.iNatInvMoney as decimal(18,2)) as iNatInvMoney,");
+                    sb.AppendLine("cast(pb.iOriTotal as decimal(18,2)) as iOriTotal,");
+                    sb.AppendLine("cast(pb.iTotal as decimal(18,2)) as iTotal,");
+
+                    sb.AppendLine("cast(sum(pb.iTaxPrice) over (partition by ph.cPOID)  as decimal(18,2)) as iTaxPrice_Total,");
+                    sb.AppendLine("cast(sum(pb.iNatInvMoney) over (partition by ph.cPOID)  as decimal(18,2)) as iNatInvMoney_Total,");
+                    sb.AppendLine("cast(sum(pb.iOriTotal) over (partition by ph.cPOID)  as decimal(18,2)) as iOriTotal_Total,");
+                    sb.AppendLine("cast(sum(pb.iTotal) over (partition by ph.cPOID)  as decimal(18,2)) as iTotal_Total,");
+
+
+                    sb.AppendLine(" CONVERT(nvarchar(30), pt.dPBVDate, 112) as dPBVDate,");
                     sb.AppendLine("v.cVenDefine1 as PayTerm,");
-                    sb.AppendLine("(case when v.cVenDefine1='预付款' then ph.cAuditDate ");
-                    sb.AppendLine("when v.cVenDefine1='见票付款' then pt.dPBVDate ");
-                    sb.AppendLine("when v.cVenDefine1='月结30天' then pt.dPBVDate+30");
-                    sb.AppendLine("when v.cVenDefine1='月结60天' then pt.dPBVDate+60");
+                    sb.AppendLine("(case when v.cVenDefine1='预付款' then CONVERT(nvarchar(30), ph.cAuditDate, 112) ");
+                    sb.AppendLine("when v.cVenDefine1='见票付款' then CONVERT(nvarchar(30), pt.dPBVDate, 112) ");
+                    sb.AppendLine("when v.cVenDefine1='月结30天' then CONVERT(nvarchar(30), pt.dPBVDate+30, 112)");
+                    sb.AppendLine("when v.cVenDefine1='月结60天' then CONVERT(nvarchar(30), pt.dPBVDate+60, 112)");
                     sb.AppendLine("end ) as PayDate,");
                     sb.AppendLine("ph.cmaker ");
                     sb.AppendLine("from PO_Pomain ph inner join Po_PoDetails pb on ph.POID=pb.POID");
@@ -314,18 +337,18 @@ namespace Print
                     SqlDataAdapter da = new SqlDataAdapter(cmdSelect);
                     System.Data.DataTable dt = new System.Data.DataTable();
                     da.Fill(dt);
-                  //  dvResult.DataSource = dt;
+                    dvResult.DataSource = dt;
 
                     
 
-                    this.reportViewer1.Reset();
-                    this.reportViewer1.LocalReport.DataSources.Clear();
-                    this.reportViewer1.LocalReport.ReportPath = "Report1.rdlc";
-                    this.reportViewer1.LocalReport.ReportEmbeddedResource = "Print.Report1.rdlc";
-                    ReportDataSource rds = new ReportDataSource("ds", dt); //ReportDataSource数据源的第一个参数必须与你添加的dataset的名字相同
-                    this.reportViewer1.LocalReport.DataSources.Add(rds);  //添加数据源
-                    this.reportViewer1.ZoomMode = ZoomMode.Percent;
-                    this.reportViewer1.RefreshReport();
+                    //this.reportViewer1.Reset();
+                    //this.reportViewer1.LocalReport.DataSources.Clear();
+                    //this.reportViewer1.LocalReport.ReportPath = "Report1.rdlc";
+                    //this.reportViewer1.LocalReport.ReportEmbeddedResource = "Print.Report1.rdlc";
+                    //ReportDataSource rds = new ReportDataSource("ds", dt); //ReportDataSource数据源的第一个参数必须与你添加的dataset的名字相同
+                    //this.reportViewer1.LocalReport.DataSources.Add(rds);  //添加数据源
+                    //this.reportViewer1.ZoomMode = ZoomMode.Percent;
+                    //this.reportViewer1.RefreshReport();
                     
 
 
@@ -399,64 +422,77 @@ namespace Print
 
         private void dvResult_Paint(object sender, PaintEventArgs e)
         {
-            //if (dvResult.Rows.Count > 1&&false)
-            //{
-            //    dvResult.Columns["cPOID"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["序号"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cmaketime"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cVenName"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cexch_name"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cInvCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cInvName"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cInvStd"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cInvAddCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cComUnitName"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["iQuantity"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["iTaxPrice"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["iNatInvMoney"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["iOriTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["iTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["dPBVDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["PayTerm"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["PayDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cmaker"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            if (dvResult.Rows.Count > 1)
+            {
+                dvResult.Columns["cPOID"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["序号"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cnt"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cmaketime"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cVenName"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cexch_name"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cInvCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cInvName"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cInvStd"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cInvAddCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cComUnitName"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["iQuantity"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["iTaxPrice"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["iNatInvMoney"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["iOriTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["iTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["dPBVDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["PayTerm"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["PayDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dvResult.Columns["cmaker"].SortMode = DataGridViewColumnSortMode.NotSortable;
 
-                
 
-            //    dvResult.Columns["cPOID"].HeaderText = "订单号";
-            //    dvResult.Columns["cmaketime"].HeaderText = "制单时间";
-            //    dvResult.Columns["cVenName"].HeaderText = "供应商";
-            //    dvResult.Columns["cexch_name"].HeaderText = "币种";
-            //    dvResult.Columns["cInvCode"].HeaderText = "存货编码";
-            //    dvResult.Columns["cInvName"].HeaderText = "存货名称";
-            //    dvResult.Columns["cInvStd"].HeaderText = "规格";
-            //    dvResult.Columns["cInvAddCode"].HeaderText = "存货代码";
-            //    dvResult.Columns["cComUnitName"].HeaderText = "单位";
-            //    dvResult.Columns["iQuantity"].HeaderText = "数量";
-            //    dvResult.Columns["iTaxPrice"].HeaderText = "累计原币发票金额";
-            //    dvResult.Columns["iNatInvMoney"].HeaderText = "累计本币发票金额";
-            //    dvResult.Columns["iOriTotal"].HeaderText = "累计原币付款";
-            //    dvResult.Columns["iTotal"].HeaderText = "累计本币付款";
-            //    dvResult.Columns["dPBVDate"].HeaderText = "开票日期";
-            //    dvResult.Columns["PayTerm"].HeaderText = "付款条件";
-            //    dvResult.Columns["PayDate"].HeaderText = "付款日期";
-            //    dvResult.Columns["cmaker"].HeaderText = "订单制单人";
-                 
-            //    for (int i = 0; i < dvResult.Rows.Count; )
-            //    {
-            //        int rows = int.Parse(dvResult.Rows[i].Cells["cnt"].Value.ToString());
-            //        if (rows>1)
-            //        {
-            //            MergeCells(i, i + rows - 1, 1, false, dvResult);
-            //            MergeCells(i, i + rows - 1, 2, false, dvResult);
-            //            MergeCells(i, i + rows - 1, 3, false, dvResult);
-            //            MergeCells(i, i + rows - 1, 4, false, dvResult);
-            //        }
-            //        i = i + rows;
-            //    }
-            //    if (dvResult.Columns["cnt"].Visible)
-            //        dvResult.Columns["cnt"].Visible = false;
-            //}
+
+                dvResult.Columns["cPOID"].HeaderText = "订单号";
+                dvResult.Columns["cmaketime"].HeaderText = "制单时间";
+                dvResult.Columns["cVenName"].HeaderText = "供应商";
+                dvResult.Columns["cexch_name"].HeaderText = "币种";
+                dvResult.Columns["cInvCode"].HeaderText = "存货编码";
+                dvResult.Columns["cInvName"].HeaderText = "存货名称";
+                dvResult.Columns["cInvStd"].HeaderText = "规格";
+                dvResult.Columns["cInvAddCode"].HeaderText = "存货代码";
+                dvResult.Columns["cComUnitName"].HeaderText = "单位";
+                dvResult.Columns["iQuantity"].HeaderText = "数量";
+                dvResult.Columns["iTaxPrice"].HeaderText = "累计原币发票金额";
+                dvResult.Columns["iNatInvMoney"].HeaderText = "累计本币发票金额";
+                dvResult.Columns["iOriTotal"].HeaderText = "累计原币付款";
+                dvResult.Columns["iTotal"].HeaderText = "累计本币付款";
+                dvResult.Columns["dPBVDate"].HeaderText = "开票日期";
+                dvResult.Columns["PayTerm"].HeaderText = "付款条件";
+                dvResult.Columns["PayDate"].HeaderText = "付款日期";
+                dvResult.Columns["cmaker"].HeaderText = "订单制单人";
+
+                for (int i = 0; i < dvResult.Rows.Count; )
+                {
+                    int rows = int.Parse(dvResult.Rows[i].Cells["cnt"].Value.ToString());
+                    if (rows > 1)
+                    {
+                        MergeCells(i, i + rows - 1, 2, false, dvResult);
+                        MergeCells(i, i + rows - 1, 3, false, dvResult);
+                        MergeCells(i, i + rows - 1, 4, false, dvResult);
+                        MergeCells(i, i + rows - 1, 5, false, dvResult);
+
+                        MergeCells(i, i + rows - 1, 16, false, dvResult);
+                        MergeCells(i, i + rows - 1, 17, false, dvResult);
+                        MergeCells(i, i + rows - 1, 18, false, dvResult);
+                        MergeCells(i, i + rows - 1, 19, false, dvResult);
+
+                        MergeCells(i, i + rows - 1, 24, false, dvResult);
+                        MergeCells(i, i + rows - 1, 25, false, dvResult);
+                        MergeCells(i, i + rows - 1, 26, false, dvResult);
+                        MergeCells(i, i + rows - 1, 27, false, dvResult);
+
+
+                    }
+                    i = i + rows;
+                }
+                //if (dvResult.Columns["cnt"].Visible)
+                //    dvResult.Columns["cnt"].Visible = false;
+            }
             
         }
 
@@ -468,7 +504,7 @@ namespace Print
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            this.reportViewer1.RefreshReport();
+          //  this.reportViewer1.RefreshReport();
         }
 
         private void reportViewer1_Load(object sender, EventArgs e)
