@@ -101,8 +101,8 @@ namespace Print
          {
              if (text != "")
              {
-                 this.Format = DateTimePickerFormat.Long;
- 
+                 this.Format = DateTimePickerFormat.Custom;
+                 this.CustomFormat = "yyyy-MM-dd";
                 this.Text = text;
              }
              else
@@ -147,7 +147,8 @@ namespace Print
          protected override void OnCloseUp(EventArgs eventargs)
          {
              DroppedDown = false;
-             this.Format = DateTimePickerFormat.Long;
+             this.Format = DateTimePickerFormat.Custom;
+             this.CustomFormat = "yyyy-MM-dd";
              base.OnCloseUp (eventargs);
          }
      

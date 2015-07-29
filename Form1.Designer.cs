@@ -35,6 +35,8 @@ namespace Print
             this.TestReportBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.sqlConnection1 = new System.Data.SqlClient.SqlConnection();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.cbPayTerm2 = new System.Windows.Forms.ComboBox();
+            this.cbPayTerm1 = new System.Windows.Forms.ComboBox();
             this.btQry = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -45,12 +47,10 @@ namespace Print
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.tbPayTerm2 = new System.Windows.Forms.TextBox();
             this.tbVendor2 = new System.Windows.Forms.TextBox();
             this.tbPocode2 = new System.Windows.Forms.TextBox();
             this.tbPoCode1 = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.tbPayTerm1 = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.tbVendor = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -81,6 +81,8 @@ namespace Print
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.cbPayTerm2);
+            this.panel1.Controls.Add(this.cbPayTerm1);
             this.panel1.Controls.Add(this.btQry);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label7);
@@ -91,12 +93,10 @@ namespace Print
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.tbPayTerm2);
             this.panel1.Controls.Add(this.tbVendor2);
             this.panel1.Controls.Add(this.tbPocode2);
             this.panel1.Controls.Add(this.tbPoCode1);
             this.panel1.Controls.Add(this.label11);
-            this.panel1.Controls.Add(this.tbPayTerm1);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.dpt6);
             this.panel1.Controls.Add(this.tbVendor);
@@ -109,12 +109,38 @@ namespace Print
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1067, 70);
+            this.panel1.Size = new System.Drawing.Size(1092, 70);
             this.panel1.TabIndex = 2;
+            // 
+            // cbPayTerm2
+            // 
+            this.cbPayTerm2.FormattingEnabled = true;
+            this.cbPayTerm2.Items.AddRange(new object[] {
+            "预付款",
+            "见票付款",
+            "月结30天",
+            "月结60天"});
+            this.cbPayTerm2.Location = new System.Drawing.Point(832, 12);
+            this.cbPayTerm2.Name = "cbPayTerm2";
+            this.cbPayTerm2.Size = new System.Drawing.Size(128, 20);
+            this.cbPayTerm2.TabIndex = 22;
+            // 
+            // cbPayTerm1
+            // 
+            this.cbPayTerm1.FormattingEnabled = true;
+            this.cbPayTerm1.Items.AddRange(new object[] {
+            "预付款",
+            "见票付款",
+            "月结30天",
+            "月结60天"});
+            this.cbPayTerm1.Location = new System.Drawing.Point(674, 13);
+            this.cbPayTerm1.Name = "cbPayTerm1";
+            this.cbPayTerm1.Size = new System.Drawing.Size(129, 20);
+            this.cbPayTerm1.TabIndex = 22;
             // 
             // btQry
             // 
-            this.btQry.Location = new System.Drawing.Point(969, 21);
+            this.btQry.Location = new System.Drawing.Point(983, 19);
             this.btQry.Name = "btQry";
             this.btQry.Size = new System.Drawing.Size(86, 34);
             this.btQry.TabIndex = 5;
@@ -203,13 +229,6 @@ namespace Print
             this.label2.TabIndex = 17;
             this.label2.Text = "供应商";
             // 
-            // tbPayTerm2
-            // 
-            this.tbPayTerm2.Location = new System.Drawing.Point(832, 12);
-            this.tbPayTerm2.Name = "tbPayTerm2";
-            this.tbPayTerm2.Size = new System.Drawing.Size(130, 21);
-            this.tbPayTerm2.TabIndex = 14;
-            // 
             // tbVendor2
             // 
             this.tbVendor2.Location = new System.Drawing.Point(181, 42);
@@ -239,13 +258,6 @@ namespace Print
             this.label11.Size = new System.Drawing.Size(53, 12);
             this.label11.TabIndex = 8;
             this.label11.Text = "开票日期";
-            // 
-            // tbPayTerm1
-            // 
-            this.tbPayTerm1.Location = new System.Drawing.Point(674, 15);
-            this.tbPayTerm1.Name = "tbPayTerm1";
-            this.tbPayTerm1.Size = new System.Drawing.Size(127, 21);
-            this.tbPayTerm1.TabIndex = 12;
             // 
             // label9
             // 
@@ -287,7 +299,7 @@ namespace Print
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.reportViewer1);
-            this.splitContainer1.Size = new System.Drawing.Size(1067, 499);
+            this.splitContainer1.Size = new System.Drawing.Size(1092, 499);
             this.splitContainer1.SplitterDistance = 65;
             this.splitContainer1.TabIndex = 3;
             // 
@@ -297,10 +309,9 @@ namespace Print
             reportDataSource1.Name = "ds";
             reportDataSource1.Value = this.TestReportBindingSource;
             this.reportViewer1.LocalReport.DataSources.Add(reportDataSource1);
-            //this.reportViewer1.LocalReport.ReportEmbeddedResource = "Print.Report1.rdlc";
             this.reportViewer1.Location = new System.Drawing.Point(0, 0);
             this.reportViewer1.Name = "reportViewer1";
-            this.reportViewer1.Size = new System.Drawing.Size(1067, 430);
+            this.reportViewer1.Size = new System.Drawing.Size(1092, 430);
             this.reportViewer1.TabIndex = 2;
             this.reportViewer1.Load += new System.EventHandler(this.reportViewer1_Load);
             // 
@@ -366,7 +377,7 @@ namespace Print
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1067, 499);
+            this.ClientSize = new System.Drawing.Size(1092, 499);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
@@ -396,11 +407,9 @@ namespace Print
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox tbPayTerm2;
         private System.Windows.Forms.TextBox tbVendor2;
         private System.Windows.Forms.TextBox tbPocode2;
         private System.Windows.Forms.TextBox tbPoCode1;
-        private System.Windows.Forms.TextBox tbPayTerm1;
         private System.Windows.Forms.TextBox tbVendor;
         private System.Windows.Forms.Label label1;
         private FlatDateTimePicker dtp2;
@@ -417,6 +426,8 @@ namespace Print
         private Microsoft.Reporting.WinForms.ReportViewer reportViewer1;
         private System.Windows.Forms.BindingSource TestReportBindingSource;
         private System.Windows.Forms.BindingSource testReportBindingSource1;
+        private System.Windows.Forms.ComboBox cbPayTerm1;
+        private System.Windows.Forms.ComboBox cbPayTerm2;
 
     }
 }

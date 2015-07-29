@@ -28,6 +28,15 @@ namespace Print
             try
             {
                 InitializeComponent();
+                dtp1.Text = String.Format("{0:yyyy-MM-dd}", new DateTime(DateTime.Now.Year,DateTime.Now.Month,1));
+                dpt3.CustomFormat = " ";
+                dpt4.CustomFormat = " ";
+                dpt5.CustomFormat = " ";
+                dpt6.CustomFormat = " ";
+                //dpt4.Text = "";
+                //dpt5.Text = "";
+                //dpt6.Text = "";
+
                 InitDatabaseSetting();
             }
             catch (Exception e)
@@ -259,18 +268,27 @@ namespace Print
                         return;
                     }
                     if (!tbVendor.Text.Equals("") && !tbVendor2.Text.Equals(""))
-                        condition.Append(" and v.cVencode>='" + tbVendor.Text + "' and v.cVencode<='" + tbVendor2.Text + "' ");
-                    //if (!dtp1.Text.Trim().Equals("") && !dtp2.Text.Trim().Equals(""))
-                        //condition.Append(" and r1.ddate>='" + String.Format("{0:yyyy-MM-dd}", dtp1.Text) + "' and r1.ddate<='" + String.Format("{0:yyyy-MM-dd}", dtp2.Text) + "' ");
-                    if (!tbPayTerm1.Text.Equals("") && !tbPayTerm2.Text.Equals(""))
-                        condition.Append(" and v.cVenDefine1>='" + tbPayTerm1.Text + "' and v.cVenDefine1<='" + tbPayTerm2.Text + "' ");
+                        condition.Append(" and cVenName>='" + tbVendor.Text + "' and cVenName<='" + tbVendor2.Text + "' ");
+                    //付款日期
+                    if (!dtp1.Text.Trim().Equals("") && !dtp2.Text.Trim().Equals(""))
+                        condition.Append(" and PayDate>='" + String.Format("{0:yyyy-MM-dd}", dtp1.Text) + "' and PayDate<='" + String.Format("{0:yyyy-MM-dd}", dtp2.Text) + "' ");
+                    //订单日期
+                    if (!dpt3.Text.Trim().Equals("") && !dpt4.Text.Trim().Equals(""))
+                        condition.Append(" and cmaketime>='" + String.Format("{0:yyyy-MM-dd}", dpt3.Text) + "' and cmaketime<='" + String.Format("{0:yyyy-MM-dd}", dpt4.Text) + "' ");
+                    //开票日期
+                    if (!dpt5.Text.Trim().Equals("") && !dpt6.Text.Trim().Equals(""))
+                        condition.Append(" and dPBVDate>='" + String.Format("{0:yyyy-MM-dd}", dpt5.Text) + "' and dPBVDate<='" + String.Format("{0:yyyy-MM-dd}", dpt6.Text) + "' ");
+                    
+                    
+                    if (!cbPayTerm1.Text.Equals("") && !cbPayTerm2.Text.Equals(""))
+                        condition.Append(" and PayTerm>='" + cbPayTerm1.Text + "' and PayTerm<='" + cbPayTerm2.Text + "' ");
                     if (!tbPoCode1.Text.Equals("") && !tbPocode2.Text.Equals(""))
-                        condition.Append(" and ph.cPOID>='" + tbPoCode1.Text + "' and ph.cPOID<='" + tbPocode2.Text + "' ");
+                        condition.Append(" and cPOID>='" + tbPoCode1.Text + "' and cPOID<='" + tbPocode2.Text + "' ");
 
           
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendLine("select row_number() over (order by aa.cPOID) as 序号,aa.* from (select top 100 count(1) over (partition by ph.cPOID) cnt,ph.cPOID,ph.cmaketime,v.cVenName,ph.cexch_name,pb.cInvCode,i.cInvName,i.cInvStd,i.cInvAddCode,cu.cComUnitName,");
-                    sb.AppendLine("pb.iQuantity,pb.iTaxPrice,pb.iNatInvMoney,pb.iOriTotal,pb.iTotal,pt.dPBVDate,");
+                    sb.AppendLine("select row_number() over (order by aa.cPOID) as 序号,aa.* from (select ph.cPOID,ph.dpodate as cmaketime,v.cVenName,ph.cexch_name,pb.cInvCode,i.cInvName,i.cInvStd,i.cInvAddCode,cu.cComUnitName,");
+                    sb.AppendLine("pb.iQuantity,pb.iMoney,pb.iSum,pb.iNatMoney,pb.iNatSum,pb.iTaxPrice,pb.iNatInvMoney,pb.iOriTotal,pb.iTotal,pt.dPBVDate,");
                     sb.AppendLine("v.cVenDefine1 as PayTerm,");
                     sb.AppendLine("(case when v.cVenDefine1='预付款' then ph.cAuditDate ");
                     sb.AppendLine("when v.cVenDefine1='见票付款' then pt.dPBVDate ");
@@ -284,7 +302,8 @@ namespace Print
                     sb.AppendLine("inner join Vendor v on v.cVencode = ph.cVencode");
                     sb.AppendLine("inner join (select pvb.iPOsID,max(pvh.dPBVDate) as dPBVDate from PurBillVouchs pvb inner join PurBillVouch pvh on pvh.PBVID = pvb.PBVID group by pvb.iPOsID) pt");
                     sb.AppendLine("on pt.iPOsID= pb.ID ) aa");
-                  //  sb.AppendLine("where pb.iTotal<=pb.iNatInvMoney");
+                    sb.AppendLine("where 1=1 ");
+                   // sb.AppendLine("and iTotal<=iNatInvMoney ");
                     sb.AppendLine(condition.ToString());
                     //sb.Remove(0, sb.Length);
                     //sb.Append("select 'ddadaf' as a union all select '22adasfdasf' union all select 'e2890345fsdklgdst' ");
