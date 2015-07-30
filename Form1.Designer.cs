@@ -31,7 +31,6 @@ namespace Print
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.TestReportBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.sqlConnection1 = new System.Data.SqlClient.SqlConnection();
             this.panel1 = new System.Windows.Forms.Panel();
             this.cbPayTerm2 = new System.Windows.Forms.ComboBox();
@@ -46,15 +45,15 @@ namespace Print
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.tbVendor2 = new System.Windows.Forms.TextBox();
             this.tbPocode2 = new System.Windows.Forms.TextBox();
             this.tbPoCode1 = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.tbVendor = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.dvResult = new System.Windows.Forms.DataGridView();
+            this.TestReportBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.ucVen1 = new Print.UC1();
             this.dpt6 = new Print.FlatDateTimePicker();
             this.dpt4 = new Print.FlatDateTimePicker();
             this.dpt5 = new Print.FlatDateTimePicker();
@@ -62,18 +61,15 @@ namespace Print
             this.dtp2 = new Print.FlatDateTimePicker();
             this.dtp1 = new Print.FlatDateTimePicker();
             this.testReportBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.TestReportBindingSource)).BeginInit();
+            this.ucVen2 = new Print.UC1();
             this.panel1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dvResult)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TestReportBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.testReportBindingSource1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // TestReportBindingSource
-            // 
-            this.TestReportBindingSource.DataMember = "TestReport";
             // 
             // sqlConnection1
             // 
@@ -81,6 +77,8 @@ namespace Print
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.ucVen2);
+            this.panel1.Controls.Add(this.ucVen1);
             this.panel1.Controls.Add(this.cbPayTerm2);
             this.panel1.Controls.Add(this.cbPayTerm1);
             this.panel1.Controls.Add(this.btQry);
@@ -93,13 +91,11 @@ namespace Print
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.tbVendor2);
             this.panel1.Controls.Add(this.tbPocode2);
             this.panel1.Controls.Add(this.tbPoCode1);
             this.panel1.Controls.Add(this.label11);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.dpt6);
-            this.panel1.Controls.Add(this.tbVendor);
             this.panel1.Controls.Add(this.dpt4);
             this.panel1.Controls.Add(this.dpt5);
             this.panel1.Controls.Add(this.label1);
@@ -229,13 +225,6 @@ namespace Print
             this.label2.TabIndex = 17;
             this.label2.Text = "供应商";
             // 
-            // tbVendor2
-            // 
-            this.tbVendor2.Location = new System.Drawing.Point(181, 42);
-            this.tbVendor2.Name = "tbVendor2";
-            this.tbVendor2.Size = new System.Drawing.Size(101, 21);
-            this.tbVendor2.TabIndex = 9;
-            // 
             // tbPocode2
             // 
             this.tbPocode2.Location = new System.Drawing.Point(832, 41);
@@ -267,13 +256,6 @@ namespace Print
             this.label9.Size = new System.Drawing.Size(53, 12);
             this.label9.TabIndex = 8;
             this.label9.Text = "订单日期";
-            // 
-            // tbVendor
-            // 
-            this.tbVendor.Location = new System.Drawing.Point(71, 42);
-            this.tbVendor.Name = "tbVendor";
-            this.tbVendor.Size = new System.Drawing.Size(81, 21);
-            this.tbVendor.TabIndex = 13;
             // 
             // label1
             // 
@@ -317,6 +299,17 @@ namespace Print
             this.dvResult.Size = new System.Drawing.Size(1092, 430);
             this.dvResult.TabIndex = 0;
             this.dvResult.Paint += new System.Windows.Forms.PaintEventHandler(this.dvResult_Paint);
+            // 
+            // TestReportBindingSource
+            // 
+            this.TestReportBindingSource.DataMember = "TestReport";
+            // 
+            // ucVen1
+            // 
+            this.ucVen1.Location = new System.Drawing.Point(50, 41);
+            this.ucVen1.Name = "ucVen1";
+            this.ucVen1.Size = new System.Drawing.Size(102, 27);
+            this.ucVen1.TabIndex = 23;
             // 
             // dpt6
             // 
@@ -376,6 +369,13 @@ namespace Print
             // 
             this.testReportBindingSource1.DataSource = typeof(Print.TestReport);
             // 
+            // ucVen2
+            // 
+            this.ucVen2.Location = new System.Drawing.Point(182, 39);
+            this.ucVen2.Name = "ucVen2";
+            this.ucVen2.Size = new System.Drawing.Size(102, 27);
+            this.ucVen2.TabIndex = 23;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -388,13 +388,13 @@ namespace Print
             this.Text = "付款日期查询";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.TestReportBindingSource)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dvResult)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TestReportBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.testReportBindingSource1)).EndInit();
             this.ResumeLayout(false);
 
@@ -411,10 +411,8 @@ namespace Print
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox tbVendor2;
         private System.Windows.Forms.TextBox tbPocode2;
         private System.Windows.Forms.TextBox tbPoCode1;
-        private System.Windows.Forms.TextBox tbVendor;
         private System.Windows.Forms.Label label1;
         private FlatDateTimePicker dtp2;
         private FlatDateTimePicker dtp1;
@@ -432,6 +430,8 @@ namespace Print
         private System.Windows.Forms.ComboBox cbPayTerm1;
         private System.Windows.Forms.ComboBox cbPayTerm2;
         private System.Windows.Forms.DataGridView dvResult;
+        private UC1 ucVen1;
+        private UC1 ucVen2;
 
     }
 }

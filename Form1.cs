@@ -38,6 +38,15 @@ namespace Print
                 //dpt6.Text = "";
 
                 InitDatabaseSetting();
+
+                SqlCommand cmdSelect = new SqlCommand("select cvencode,cvenname from vendor", this.sqlConnection1);
+                this.sqlConnection1.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmdSelect);
+                System.Data.DataTable dt = new System.Data.DataTable();
+                da.Fill(dt);
+                ucVen1.setData(dt);
+                ucVen2.setData(dt);
+
             }
             catch (Exception e)
             {
@@ -267,8 +276,9 @@ namespace Print
                         MessageBox.Show("请您选择付款日期", "提示");
                         return;
                     }
-                    if (!tbVendor.Text.Equals("") && !tbVendor2.Text.Equals(""))
-                        condition.Append(" and cVenName>='" + tbVendor.Text + "' and cVenName<='" + tbVendor2.Text + "' ");
+
+                    if (ucVen1.getSelectID() != null && ucVen2.getSelectID() != null)
+                        condition.Append(" and cVenCode>='" + ucVen1.getSelectID() + "' and cVenCode<='" + ucVen2.getSelectID() + "' ");
                     //付款日期
                     if (!dtp1.Text.Trim().Equals("") && !dtp2.Text.Trim().Equals(""))
                         condition.Append(" and PayDate>='" + String.Format("{0:yyyy-MM-dd}", dtp1.Text) + "' and PayDate<='" + String.Format("{0:yyyy-MM-dd}", dtp2.Text) + "' ");
@@ -287,7 +297,7 @@ namespace Print
 
           
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendLine("select row_number() over (order by aa.cPOID) as 序号,aa.* from (select count(1) over (partition by ph.cPOID) as cnt, ph.cPOID,CONVERT(nvarchar(30), ph.dpodate, 112) as cmaketime,v.cVenName,ph.cexch_name,pb.cInvCode,i.cInvName,i.cInvStd,i.cInvAddCode,cu.cComUnitName,");
+                    sb.AppendLine("select row_number() over (order by aa.cPOID) as 序号,aa.* from (select count(1) over (partition by ph.cPOID) as cnt, ph.cPOID,CONVERT(nvarchar(30), ph.dpodate, 112) as cmaketime,v.cVenCode,v.cVenName,ph.cexch_name,pb.cInvCode,i.cInvName,i.cInvStd,i.cInvAddCode,cu.cComUnitName,");
                     sb.AppendLine("cast(pb.iQuantity as decimal(18,2)) as iQuantity,");
                     sb.AppendLine("cast(pb.iMoney as decimal(18,2)) as iMoney,");
                     sb.AppendLine("cast(pb.iSum as decimal(18,2)) as iSum,");
@@ -417,7 +427,7 @@ namespace Print
 
             g.DrawRectangle(gridPen, newCell);
 
-            g.DrawString(dataGrid.Rows[RowId1].Cells[Column].Value.ToString(), dataGrid.DefaultCellStyle.Font, new SolidBrush(isSelected ? dataGrid.DefaultCellStyle.SelectionForeColor : dataGrid.DefaultCellStyle.ForeColor), newCell.X + newCell.Width / 3, newCell.Y + newCell.Height / 3);
+            g.DrawString(dataGrid.Rows[RowId1].Cells[Column].Value.ToString(), dataGrid.DefaultCellStyle.Font, new SolidBrush(isSelected ? dataGrid.DefaultCellStyle.SelectionForeColor : dataGrid.DefaultCellStyle.ForeColor), newCell.X + 0*newCell.Width / 3, newCell.Y + newCell.Height / 3);
         }
 
         private void dvResult_Paint(object sender, PaintEventArgs e)
