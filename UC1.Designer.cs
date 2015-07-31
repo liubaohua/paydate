@@ -49,6 +49,7 @@
             this.tb1.Name = "tb1";
             this.tb1.Size = new System.Drawing.Size(113, 21);
             this.tb1.TabIndex = 1;
+            this.tb1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb1_KeyPress);
             // 
             // UC1
             // 

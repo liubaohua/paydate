@@ -9,11 +9,12 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Print</RootNamespace>
-    <AssemblyName>1</AssemblyName>
+    <AssemblyName>付款日期查询</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -26,8 +27,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -51,12 +52,45 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>5A7097708E44E5F7A7E97FF1917D886627C1E536</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>ICApp_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="SourceGrid">
+      <HintPath>..\..\cai\SourceGrid_4_40_src\SourceGrid.Examples\bin\Debug\SourceGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceGrid.PingGrid.Backend.Essent">
+      <HintPath>..\..\cai\SourceGrid_4_40_src\SourceGrid.Examples\bin\Debug\SourceGrid.PingGrid.Backend.Essent.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceGrid.PingGrid.Backend.NHibernate">
+      <HintPath>..\..\cai\SourceGrid_4_40_src\SourceGrid.Examples\bin\Debug\SourceGrid.PingGrid.Backend.NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceGrid.PingGrid.Backends.DSet">
+      <HintPath>..\..\cai\SourceGrid_4_40_src\SourceGrid.Examples\bin\Debug\SourceGrid.PingGrid.Backends.DSet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -69,12 +103,25 @@
     <Compile Include="FlatDateTimePicker.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="PayDateResult.cs" />
     <Compile Include="RC4.cs" />
     <Compile Include="DbSettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DbSettingForm.Designer.cs">
       <DependentUpon>DbSettingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SelectDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectDlg.Designer.cs">
+      <DependentUpon>SelectDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UC1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC1.Designer.cs">
+      <DependentUpon>UC1.cs</DependentUpon>
     </Compile>
     <Compile Include="UserData.cs" />
     <Compile Include="ComboxItem.cs" />
@@ -102,7 +149,23 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Content Include="Report1.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <EmbeddedResource Include="SelectDlg.resx">
+      <DependentUpon>SelectDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC1.resx">
+      <DependentUpon>UC1.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="App.config" />
+    <None Include="CrystalReport1.mht" />
+    <None Include="ICApp_TemporaryKey.pfx" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\DataSources\Form1.TestReport.datasource" />
+    <None Include="Properties\DataSources\PayDateResult.datasource" />
+    <None Include="Properties\DataSources\TestReport.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

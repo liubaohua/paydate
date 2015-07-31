@@ -17,7 +17,10 @@ using System.Xml.Serialization;
 using System.Threading;
 //using Microsoft.Office.Core;
 using Microsoft.Office;
-using Microsoft.Reporting.WinForms;
+
+using SourceGrid;
+using SourceGrid.Cells.Controllers;
+
 
 namespace Print
 {
@@ -33,26 +36,32 @@ namespace Print
                 dpt4.CustomFormat = " ";
                 dpt5.CustomFormat = " ";
                 dpt6.CustomFormat = " ";
-                //dpt4.Text = "";
-                //dpt5.Text = "";
-                //dpt6.Text = "";
 
                 InitDatabaseSetting();
-
-                SqlCommand cmdSelect = new SqlCommand("select cvencode,cvenname from vendor", this.sqlConnection1);
-                this.sqlConnection1.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmdSelect);
-                System.Data.DataTable dt = new System.Data.DataTable();
-                da.Fill(dt);
-                ucVen1.setData(dt);
-                ucVen2.setData(dt);
-
+                ucVen1.setDbInfo("供应商", "select cvencode as 编码,cvenname as 名称 from vendor order by cvencode", "编码", "编码", "名称");
+                ucVen2.setDbInfo("供应商", "select cvencode as 编码,cvenname as 名称 from vendor order by cvencode", "编码", "编码", "名称");
+                ucVen1.setParentForm(this);
+                ucVen2.setParentForm(this);
+                
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message+"\n"+e.StackTrace,"");
             }
            
+        }
+
+        
+
+        public DataTable getSqlData(string sql)
+        {
+            SqlCommand cmdSelect = new SqlCommand(sql, this.sqlConnection1);
+            this.sqlConnection1.Open();
+            SqlDataAdapter da = new SqlDataAdapter(cmdSelect);
+            System.Data.DataTable dt = new System.Data.DataTable();
+            da.Fill(dt);
+            this.sqlConnection1.Close();
+            return dt;
         }
 
         private System.Data.SqlClient.SqlConnection sqlConnection1;
@@ -265,9 +274,171 @@ namespace Print
         {
         }
 
+        private SourceGrid.Grid grid1;
+
+       private void initGrid(DataTable dt)
+        {
+            //grid1 = new Grid();
+            //this.SuspendLayout();
+            //// 
+            //// grid1
+            //// 
+            //this.grid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            //                                                           | System.Windows.Forms.AnchorStyles.Left)
+            //                                                          | System.Windows.Forms.AnchorStyles.Right)));
+            //this.grid1.Location = new System.Drawing.Point(8, 8);
+            //this.grid1.Name = "grid1";
+            //this.grid1.Size = new System.Drawing.Size(612, 423);
+            //this.grid1.SpecialKeys = SourceGrid.GridSpecialKeys.Default;
+            //this.grid1.TabIndex = 0;
+            // 
+            // frmSample21
+            // 
+           // this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+           // this.ClientSize = new System.Drawing.Size(628, 438);
+           // this.Controls.Add(this.grid1);
+           // this.Name = "frmSample21";
+           // this.Text = "ColumnSpan and RowSpan";
+           //// this.Load += new System.EventHandler(this.frmSample14_Load);
+           // this.ResumeLayout(false);
+           // this.Controls.Add(grid1);
+           
+
+        }
+
+
+       private void DoFull1(DataTable dt)
+       {
+           string[] titles = new string[] { "序号", "订单号", "日期", "供应商", "币种", "存货编码", "存货名称", "规格型号", "存货代码", "单位", "数量", "原币无税金额", "原币含税金额", "本币无税金额", "本币含税金额", "原币无税金额合计", "原币含税金额合计", "本币无税金额合计", "本币含税金额合计", "原币发票金额", "本币发票金额", "原币付款", "本币付款", "原币发票金额合计", "本币发票金额合计", "原币付款合计", "本币付款合计", "开票日期", "付款条件", "付款日期", "制单人" };
+           
+           if (dt.Rows.Count > 0)
+           {
+               grid1.Redim(1, dt.Columns.Count - 2);
+               grid1.Redim(dt.Rows.Count + 1, dt.Columns.Count-2);
+           }
+           else
+           {
+               grid1.Redim(1, titles.Length);
+           }
+
+           grid1.FixedRows = 1;
+           
+           
+           for (int i = 0; i < titles.Length;i++)
+               grid1[0, i] = new MyHeader(titles[i]);
+
+           
+           //grid1[0, 0].ColumnSpan = 3;
+           // grid1[0, 0].AddController(new SourceGrid.Cells.Controllers.SortableHeader());
+
+           //grid1[1, 0] = new SourceGrid.Cells.Cell("span2", typeof(string));
+           //grid1[1, 0].RowSpan = 2;
+           //grid1[1, 1] = new SourceGrid.Cells.Cell("ddddd", typeof(string));
+           //grid1[2, 1] = new SourceGrid.Cells.Cell("dfaddd", typeof(string));
+           for (int i = 0; i < dt.Rows.Count; i++)
+           {
+               int cnt = int.Parse(dt.Rows[i]["cnt"].ToString());
+
+               grid1[i+1, 0] = new SourceGrid.Cells.Cell(dt.Rows[i]["序号"].ToString(), typeof(int));
+              // grid1[i+1, ++col] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPOID"].ToString(), typeof(string));
+               if(i==0 || (i>0 && !dt.Rows[i]["cPOID"].ToString().Equals(dt.Rows[i-1]["cPOID"].ToString())))
+               {
+                   grid1[i + 1, 1] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPOID"].ToString(), typeof(string));
+                   grid1[i + 1, 2] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaketime"].ToString(), typeof(string));
+                   grid1[i + 1, 3] = new SourceGrid.Cells.Cell(dt.Rows[i]["cVenName"].ToString(), typeof(string));
+                   grid1[i + 1, 4] = new SourceGrid.Cells.Cell(dt.Rows[i]["cexch_name"].ToString(), typeof(string));
+
+                   grid1[i + 1, 15] = new SourceGrid.Cells.Cell(dt.Rows[i]["iMoney_Total"].ToString(), typeof(decimal));
+                   grid1[i + 1, 16] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum_Total"].ToString(), typeof(decimal));
+                   grid1[i + 1, 17] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatMoney_Total"].ToString(), typeof(decimal));
+                   grid1[i + 1, 18] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatSum_Total"].ToString(), typeof(decimal));
+
+                   grid1[i + 1, 23] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTaxPrice_Total"].ToString(), typeof(decimal));
+                   grid1[i + 1, 24] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatInvMoney_Total"].ToString(), typeof(decimal));
+                   grid1[i + 1, 25] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal_Total"].ToString(), typeof(decimal));
+                   grid1[i + 1, 26] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal_Total"].ToString(), typeof(decimal));
+
+                    if (cnt > 1)
+                    {
+                        grid1[i + 1, 1].RowSpan = cnt;
+                        grid1[i + 1, 2].RowSpan = cnt;
+                        grid1[i + 1, 3].RowSpan = cnt;
+                        grid1[i + 1, 4].RowSpan = cnt;
+
+                        
+                        grid1[i + 1, 15].RowSpan = cnt;
+                        grid1[i + 1, 16].RowSpan = cnt;
+                        grid1[i + 1, 17].RowSpan = cnt;
+                        grid1[i + 1, 18].RowSpan = cnt;
+                        
+                        grid1[i + 1, 23].RowSpan = cnt;
+                        grid1[i + 1, 24].RowSpan = cnt;
+                        grid1[i + 1, 25].RowSpan = cnt;
+                        grid1[i + 1, 26].RowSpan = cnt;
+
+                    }
+               }
+               //grid1[i + 1, 2] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaketime"].ToString(), typeof(string));
+               //grid1[i+1, 3] = new SourceGrid.Cells.Cell(dt.Rows[i]["cVenName"].ToString(), typeof(string));
+               //grid1[i+1, 4] = new SourceGrid.Cells.Cell(dt.Rows[i]["cexch_name"].ToString(), typeof(string));
+               grid1[i+1, 5] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvCode"].ToString(), typeof(string));
+               grid1[i+1, 6] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvName"].ToString(), typeof(string));
+               grid1[i+1, 7] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvStd"].ToString(), typeof(string));
+               grid1[i+1, 8] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvAddCode"].ToString(), typeof(string));
+               grid1[i+1, 9] = new SourceGrid.Cells.Cell(dt.Rows[i]["cComUnitName"].ToString(), typeof(string));
+               grid1[i+1, 10] = new SourceGrid.Cells.Cell(dt.Rows[i]["iQuantity"].ToString(), typeof(decimal));
+               grid1[i+1, 11] = new SourceGrid.Cells.Cell(dt.Rows[i]["iMoney"].ToString(), typeof(decimal));
+               grid1[i+1, 12] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum"].ToString(), typeof(decimal));
+               grid1[i+1, 13] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatMoney"].ToString(), typeof(decimal));
+               grid1[i+1, 14] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatSum"].ToString(), typeof(decimal));
+               //grid1[i+1, 15] = new SourceGrid.Cells.Cell(dt.Rows[i]["iMoney_Total"].ToString(), typeof(decimal));
+               //grid1[i+1, 16] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum_Total"].ToString(), typeof(decimal));
+               //grid1[i+1, 17] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatMoney_Total"].ToString(), typeof(decimal));
+               //grid1[i+1, 18] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatSum_Total"].ToString(), typeof(decimal));
+               grid1[i+1, 19] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTaxPrice"].ToString(), typeof(decimal));
+               grid1[i+1, 20] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatInvMoney"].ToString(), typeof(decimal));
+               grid1[i+1, 21] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal"].ToString(), typeof(decimal));
+               grid1[i+1, 22] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal"].ToString(), typeof(decimal));
+               //grid1[i+1, 23] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTaxPrice_Total"].ToString(), typeof(decimal));
+               //grid1[i+1, 24] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatInvMoney_Total"].ToString(), typeof(decimal));
+               //grid1[i+1, 25] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal_Total"].ToString(), typeof(decimal));
+               //grid1[i+1, 26] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal_Total"].ToString(), typeof(decimal));
+               grid1[i+1, 27] = new SourceGrid.Cells.Cell(dt.Rows[i]["dPBVDate"].ToString(), typeof(string));
+               grid1[i+1, 28] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayTerm"].ToString(), typeof(string));
+               grid1[i+1, 29] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayDate"].ToString(), typeof(string));
+               grid1[i+1, 30] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaker"].ToString(), typeof(string));
+
+           }
+           //grid1.AutoStretchColumnsToFitWidth = true; 
+           //grid1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;// doesnot work
+           grid1.Columns.AutoSize(true);
+           grid1.Columns.StretchToFit();
+           
+       }
+
+       private class MyHeader : SourceGrid.Cells.ColumnHeader
+       {
+           public MyHeader(object value)
+               : base(value)
+           {
+               //1 Header Row
+               SourceGrid.Cells.Views.ColumnHeader view = new SourceGrid.Cells.Views.ColumnHeader();
+               view.Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
+               view.TextAlignment = DevAge.Drawing.ContentAlignment.MiddleCenter;
+               View = view;
+
+               AutomaticSortEnabled = false;
+           }
+       }
+
 
         private void btQry_Click(object sender, EventArgs e)
         {
+            if (new DateTime().CompareTo(new DateTime(2015, 8, 30)) > 0)
+            {
+                MessageBox.Show("演示日期到期！");
+                return;
+            }
                 try
                 {
                     StringBuilder condition = new StringBuilder();
@@ -338,6 +509,7 @@ namespace Print
                     sb.AppendLine("where 1=1 ");
                    // sb.AppendLine("and iTotal<=iNatInvMoney ");
                     sb.AppendLine(condition.ToString());
+                    string s = sb.ToString();
                     //sb.Remove(0, sb.Length);
                     //sb.Append("select 'ddadaf' as a union all select '22adasfdasf' union all select 'e2890345fsdklgdst' ");
 
@@ -347,7 +519,10 @@ namespace Print
                     SqlDataAdapter da = new SqlDataAdapter(cmdSelect);
                     System.Data.DataTable dt = new System.Data.DataTable();
                     da.Fill(dt);
-                    dvResult.DataSource = dt;
+                   // dvResult.DataSource = dt;
+                    DoFull1(dt);
+                    
+
 
                     
 
@@ -409,6 +584,7 @@ namespace Print
             Graphics g = dataGrid.CreateGraphics();
             Pen gridPen = new Pen(dataGrid.GridColor);
 
+            
             //Cells Rectangles
             Rectangle CellRectangle1 = dataGrid.GetCellDisplayRectangle(Column, RowId1, true);
             Rectangle CellRectangle2 = dataGrid.GetCellDisplayRectangle(Column, RowId2, true);
@@ -432,77 +608,79 @@ namespace Print
 
         private void dvResult_Paint(object sender, PaintEventArgs e)
         {
-            if (dvResult.Rows.Count > 1)
-            {
-                dvResult.Columns["cPOID"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["序号"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cnt"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cmaketime"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cVenName"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cexch_name"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cInvCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cInvName"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cInvStd"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cInvAddCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cComUnitName"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["iQuantity"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["iTaxPrice"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["iNatInvMoney"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["iOriTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["iTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["dPBVDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["PayTerm"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["PayDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dvResult.Columns["cmaker"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //if (dvResult.Rows.Count > 1)
+            //{
+            //    dvResult.Columns["cPOID"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["序号"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cnt"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cmaketime"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cVenName"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cexch_name"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cInvCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cInvName"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cInvStd"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cInvAddCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cComUnitName"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["iQuantity"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["iTaxPrice"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["iNatInvMoney"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["iOriTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["iTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["dPBVDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["PayTerm"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["PayDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //    dvResult.Columns["cmaker"].SortMode = DataGridViewColumnSortMode.NotSortable;
 
 
 
-                dvResult.Columns["cPOID"].HeaderText = "订单号";
-                dvResult.Columns["cmaketime"].HeaderText = "制单时间";
-                dvResult.Columns["cVenName"].HeaderText = "供应商";
-                dvResult.Columns["cexch_name"].HeaderText = "币种";
-                dvResult.Columns["cInvCode"].HeaderText = "存货编码";
-                dvResult.Columns["cInvName"].HeaderText = "存货名称";
-                dvResult.Columns["cInvStd"].HeaderText = "规格";
-                dvResult.Columns["cInvAddCode"].HeaderText = "存货代码";
-                dvResult.Columns["cComUnitName"].HeaderText = "单位";
-                dvResult.Columns["iQuantity"].HeaderText = "数量";
-                dvResult.Columns["iTaxPrice"].HeaderText = "累计原币发票金额";
-                dvResult.Columns["iNatInvMoney"].HeaderText = "累计本币发票金额";
-                dvResult.Columns["iOriTotal"].HeaderText = "累计原币付款";
-                dvResult.Columns["iTotal"].HeaderText = "累计本币付款";
-                dvResult.Columns["dPBVDate"].HeaderText = "开票日期";
-                dvResult.Columns["PayTerm"].HeaderText = "付款条件";
-                dvResult.Columns["PayDate"].HeaderText = "付款日期";
-                dvResult.Columns["cmaker"].HeaderText = "订单制单人";
+            //    dvResult.Columns["cPOID"].HeaderText = "订单号";
+            //    dvResult.Columns["cmaketime"].HeaderText = "制单时间";
+            //    dvResult.Columns["cVenName"].HeaderText = "供应商";
+            //    dvResult.Columns["cexch_name"].HeaderText = "币种";
+            //    dvResult.Columns["cInvCode"].HeaderText = "存货编码";
+            //    dvResult.Columns["cInvName"].HeaderText = "存货名称";
+            //    dvResult.Columns["cInvStd"].HeaderText = "规格";
+            //    dvResult.Columns["cInvAddCode"].HeaderText = "存货代码";
+            //    dvResult.Columns["cComUnitName"].HeaderText = "单位";
+            //    dvResult.Columns["iQuantity"].HeaderText = "数量";
+            //    dvResult.Columns["iTaxPrice"].HeaderText = "累计原币发票金额";
+            //    dvResult.Columns["iNatInvMoney"].HeaderText = "累计本币发票金额";
+            //    dvResult.Columns["iOriTotal"].HeaderText = "累计原币付款";
+            //    dvResult.Columns["iTotal"].HeaderText = "累计本币付款";
+            //    dvResult.Columns["dPBVDate"].HeaderText = "开票日期";
+            //    dvResult.Columns["PayTerm"].HeaderText = "付款条件";
+            //    dvResult.Columns["PayDate"].HeaderText = "付款日期";
+            //    dvResult.Columns["cmaker"].HeaderText = "订单制单人";
 
-                for (int i = 0; i < dvResult.Rows.Count; )
-                {
-                    int rows = int.Parse(dvResult.Rows[i].Cells["cnt"].Value.ToString());
-                    if (rows > 1)
-                    {
-                        MergeCells(i, i + rows - 1, 2, false, dvResult);
-                        MergeCells(i, i + rows - 1, 3, false, dvResult);
-                        MergeCells(i, i + rows - 1, 4, false, dvResult);
-                        MergeCells(i, i + rows - 1, 5, false, dvResult);
+            //    for (int i = 0; i < dvResult.Rows.Count; )
+            //    {
+            //        int rows = int.Parse(dvResult.Rows[i].Cells["cnt"].Value.ToString());
+            //        if (rows > 1)
+            //        {
+            //            MergeCells(i, i + rows - 1, 2, false, dvResult);
+            //            MergeCells(i, i + rows - 1, 3, false, dvResult);
+            //            MergeCells(i, i + rows - 1, 4, false, dvResult);
+            //            MergeCells(i, i + rows - 1, 5, false, dvResult);
 
-                        MergeCells(i, i + rows - 1, 16, false, dvResult);
-                        MergeCells(i, i + rows - 1, 17, false, dvResult);
-                        MergeCells(i, i + rows - 1, 18, false, dvResult);
-                        MergeCells(i, i + rows - 1, 19, false, dvResult);
+            //            MergeCells(i, i + rows - 1, 16, false, dvResult);
+            //            MergeCells(i, i + rows - 1, 17, false, dvResult);
+            //            MergeCells(i, i + rows - 1, 18, false, dvResult);
+            //            MergeCells(i, i + rows - 1, 19, false, dvResult);
 
-                        MergeCells(i, i + rows - 1, 24, false, dvResult);
-                        MergeCells(i, i + rows - 1, 25, false, dvResult);
-                        MergeCells(i, i + rows - 1, 26, false, dvResult);
-                        MergeCells(i, i + rows - 1, 27, false, dvResult);
+            //            MergeCells(i, i + rows - 1, 24, false, dvResult);
+            //            MergeCells(i, i + rows - 1, 25, false, dvResult);
+            //            MergeCells(i, i + rows - 1, 26, false, dvResult);
+            //            MergeCells(i, i + rows - 1, 27, false, dvResult);
 
 
-                    }
-                    i = i + rows;
-                }
-                //if (dvResult.Columns["cnt"].Visible)
-                //    dvResult.Columns["cnt"].Visible = false;
-            }
+            //        }
+            //        i = i + rows;
+            //    }
+            //    if (dvResult.Columns["cvencode"].Visible)
+            //        dvResult.Columns["cvencode"].Visible = false;
+            //    if (dvResult.Columns["cnt"].Visible)
+            //        dvResult.Columns["cnt"].Visible = false;
+            //}
             
         }
 
@@ -521,16 +699,10 @@ namespace Print
         {
 
         }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+
+        }
     }
-
-
-    public class TestReport
-    {
-        public string a { get; set; }
-        public double b { get; set; }
-        public double c { get; set; }
-        public double d { get; set; }
-    }
-
-
 }

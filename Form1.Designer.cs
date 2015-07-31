@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Windows.Forms;
+using SourceGrid;
 namespace Print
 {
     partial class Form1
@@ -29,10 +31,11 @@ namespace Print
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.sqlConnection1 = new System.Data.SqlClient.SqlConnection();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.ucVen2 = new Print.UC1();
+            this.ucVen1 = new Print.UC1();
             this.cbPayTerm2 = new System.Windows.Forms.ComboBox();
             this.cbPayTerm1 = new System.Windows.Forms.ComboBox();
             this.btQry = new System.Windows.Forms.Button();
@@ -49,26 +52,16 @@ namespace Print
             this.tbPoCode1 = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.dvResult = new System.Windows.Forms.DataGridView();
-            this.TestReportBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.ucVen1 = new Print.UC1();
             this.dpt6 = new Print.FlatDateTimePicker();
             this.dpt4 = new Print.FlatDateTimePicker();
             this.dpt5 = new Print.FlatDateTimePicker();
+            this.label1 = new System.Windows.Forms.Label();
             this.dpt3 = new Print.FlatDateTimePicker();
             this.dtp2 = new Print.FlatDateTimePicker();
             this.dtp1 = new Print.FlatDateTimePicker();
-            this.testReportBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.ucVen2 = new Print.UC1();
+            this.button1 = new System.Windows.Forms.Button();
+            this.grid1 = new SourceGrid.Grid();
             this.panel1.SuspendLayout();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dvResult)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.TestReportBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.testReportBindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
             // sqlConnection1
@@ -105,8 +98,22 @@ namespace Print
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1092, 70);
+            this.panel1.Size = new System.Drawing.Size(1604, 79);
             this.panel1.TabIndex = 2;
+            // 
+            // ucVen2
+            // 
+            this.ucVen2.Location = new System.Drawing.Point(182, 39);
+            this.ucVen2.Name = "ucVen2";
+            this.ucVen2.Size = new System.Drawing.Size(102, 27);
+            this.ucVen2.TabIndex = 23;
+            // 
+            // ucVen1
+            // 
+            this.ucVen1.Location = new System.Drawing.Point(50, 41);
+            this.ucVen1.Name = "ucVen1";
+            this.ucVen1.Size = new System.Drawing.Size(102, 27);
+            this.ucVen1.TabIndex = 23;
             // 
             // cbPayTerm2
             // 
@@ -136,9 +143,10 @@ namespace Print
             // 
             // btQry
             // 
-            this.btQry.Location = new System.Drawing.Point(983, 19);
+            this.btQry.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btQry.Location = new System.Drawing.Point(977, 21);
             this.btQry.Name = "btQry";
-            this.btQry.Size = new System.Drawing.Size(86, 34);
+            this.btQry.Size = new System.Drawing.Size(75, 34);
             this.btQry.TabIndex = 5;
             this.btQry.Text = "查询";
             this.btQry.UseVisualStyleBackColor = true;
@@ -257,60 +265,6 @@ namespace Print
             this.label9.TabIndex = 8;
             this.label9.Text = "订单日期";
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 12);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "付款期间";
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.panel1);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.dvResult);
-            this.splitContainer1.Size = new System.Drawing.Size(1092, 499);
-            this.splitContainer1.SplitterDistance = 65;
-            this.splitContainer1.TabIndex = 3;
-            // 
-            // dvResult
-            // 
-            this.dvResult.AllowUserToAddRows = false;
-            this.dvResult.AllowUserToDeleteRows = false;
-            this.dvResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dvResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dvResult.Location = new System.Drawing.Point(0, 0);
-            this.dvResult.Name = "dvResult";
-            this.dvResult.ReadOnly = true;
-            this.dvResult.RowTemplate.Height = 23;
-            this.dvResult.Size = new System.Drawing.Size(1092, 430);
-            this.dvResult.TabIndex = 0;
-            this.dvResult.Paint += new System.Windows.Forms.PaintEventHandler(this.dvResult_Paint);
-            // 
-            // TestReportBindingSource
-            // 
-            this.TestReportBindingSource.DataMember = "TestReport";
-            // 
-            // ucVen1
-            // 
-            this.ucVen1.Location = new System.Drawing.Point(50, 41);
-            this.ucVen1.Name = "ucVen1";
-            this.ucVen1.Size = new System.Drawing.Size(102, 27);
-            this.ucVen1.TabIndex = 23;
-            // 
             // dpt6
             // 
             this.dpt6.CustomFormat = "yyyy-MM-dd";
@@ -337,6 +291,15 @@ namespace Print
             this.dpt5.Name = "dpt5";
             this.dpt5.Size = new System.Drawing.Size(105, 21);
             this.dpt5.TabIndex = 7;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 12);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "付款期间";
             // 
             // dpt3
             // 
@@ -365,40 +328,62 @@ namespace Print
             this.dtp1.Size = new System.Drawing.Size(81, 21);
             this.dtp1.TabIndex = 7;
             // 
-            // testReportBindingSource1
+            // button1
             // 
-            this.testReportBindingSource1.DataSource = typeof(Print.TestReport);
+            this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button1.Location = new System.Drawing.Point(0, 476);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(1604, 23);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
             // 
-            // ucVen2
+            // grid1
             // 
-            this.ucVen2.Location = new System.Drawing.Point(182, 39);
-            this.ucVen2.Name = "ucVen2";
-            this.ucVen2.Size = new System.Drawing.Size(102, 27);
-            this.ucVen2.TabIndex = 23;
+            this.grid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grid1.EnableSort = true;
+            this.grid1.Location = new System.Drawing.Point(0, 79);
+            this.grid1.Name = "grid1";
+            this.grid1.OptimizeMode = SourceGrid.CellOptimizeMode.ForRows;
+            this.grid1.SelectionMode = SourceGrid.GridSelectionMode.Cell;
+            this.grid1.Size = new System.Drawing.Size(1604, 420);
+            this.grid1.TabIndex = 0;
+            this.grid1.TabStop = true;
+            this.grid1.ToolTipText = "";
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1092, 499);
-            this.Controls.Add(this.splitContainer1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.ClientSize = new System.Drawing.Size(1604, 499);
+            this.Controls.Add(this.grid1);
+            this.Controls.Add(this.panel1);
             this.KeyPreview = true;
+            this.KeyDown+=new KeyEventHandler(Form1_KeyDown);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "付款日期查询";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.Text = "付款日期查询(演示版)";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dvResult)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.TestReportBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.testReportBindingSource1)).EndInit();
             this.ResumeLayout(false);
 
         }
+
+        public void reSettable()
+        {
+            grid1 = new Grid();
+            this.grid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                                                                       | System.Windows.Forms.AnchorStyles.Left)
+                                                                      | System.Windows.Forms.AnchorStyles.Right)));
+            this.grid1.Location = new System.Drawing.Point(8, 8);
+            this.grid1.Name = "grid1";
+            this.grid1.SpecialKeys = SourceGrid.GridSpecialKeys.Default;
+            this.grid1.TabIndex = 0;
+            this.grid1.Location = new System.Drawing.Point(0, 0);
+            grid1.Dock = DockStyle.Fill;
+            this.Controls.Add(grid1);
+        }
+
+
 
         #endregion
 
@@ -416,7 +401,6 @@ namespace Print
         private System.Windows.Forms.Label label1;
         private FlatDateTimePicker dtp2;
         private FlatDateTimePicker dtp1;
-        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
         private FlatDateTimePicker dpt4;
@@ -425,13 +409,11 @@ namespace Print
         private System.Windows.Forms.Label label11;
         private FlatDateTimePicker dpt6;
         private FlatDateTimePicker dpt5;
-        private System.Windows.Forms.BindingSource TestReportBindingSource;
-        private System.Windows.Forms.BindingSource testReportBindingSource1;
         private System.Windows.Forms.ComboBox cbPayTerm1;
         private System.Windows.Forms.ComboBox cbPayTerm2;
-        private System.Windows.Forms.DataGridView dvResult;
         private UC1 ucVen1;
         private UC1 ucVen2;
+        private System.Windows.Forms.Button button1;
 
     }
 }
