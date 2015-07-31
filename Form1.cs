@@ -468,28 +468,37 @@ namespace Print
 
           
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendLine("select row_number() over (order by aa.cPOID) as 序号,aa.* from (select count(1) over (partition by ph.cPOID) as cnt, ph.cPOID,CONVERT(nvarchar(30), ph.dpodate, 112) as cmaketime,v.cVenCode,v.cVenName,ph.cexch_name,pb.cInvCode,i.cInvName,i.cInvStd,i.cInvAddCode,cu.cComUnitName,");
+                    sb.AppendLine("select count(1) over (partition by cPOID) as cnt,");
+
+                    sb.AppendLine("cast(sum(iMoney) over (partition by cPOID)  as decimal(18,2)) as iMoney_Total,");
+                    sb.AppendLine("cast(sum(iSum) over (partition by cPOID)  as decimal(18,2)) as iSum_Total,");
+                    sb.AppendLine("cast(sum(iNatMoney) over (partition by cPOID)  as decimal(18,2)) as iNatMoney_Total,");
+                    sb.AppendLine("cast(sum(iNatSum) over (partition by cPOID)  as decimal(18,2)) as iNatSum_Total,");
+
+
+                    sb.AppendLine("cast(sum(iTaxPrice) over (partition by cPOID)  as decimal(18,2)) as iTaxPrice_Total,");
+                    sb.AppendLine("cast(sum(iNatInvMoney) over (partition by cPOID)  as decimal(18,2)) as iNatInvMoney_Total,");
+                    sb.AppendLine("cast(sum(iOriTotal) over (partition by cPOID)  as decimal(18,2)) as iOriTotal_Total,");
+                    sb.AppendLine("cast(sum(iTotal) over (partition by cPOID)  as decimal(18,2)) as iTotal_Total,");
+
+
+                    sb.AppendLine("xx.* from (select row_number() over (order by aa.cPOID) as 序号,aa.* from (select ph.cPOID,CONVERT(nvarchar(30), ph.dpodate, 112) as cmaketime,v.cVenCode,v.cVenName,ph.cexch_name,pb.cInvCode,i.cInvName,i.cInvStd,i.cInvAddCode,cu.cComUnitName,");
+
                     sb.AppendLine("cast(pb.iQuantity as decimal(18,2)) as iQuantity,");
                     sb.AppendLine("cast(pb.iMoney as decimal(18,2)) as iMoney,");
                     sb.AppendLine("cast(pb.iSum as decimal(18,2)) as iSum,");
                     sb.AppendLine("cast(pb.iNatMoney as decimal(18,2)) as iNatMoney,");
                     sb.AppendLine("cast(pb.iNatSum as decimal(18,2)) as iNatSum,");
 
-                    sb.AppendLine("cast(sum(pb.iMoney) over (partition by ph.cPOID)  as decimal(18,2)) as iMoney_Total,");
-                    sb.AppendLine("cast(sum(pb.iSum) over (partition by ph.cPOID)  as decimal(18,2)) as iSum_Total,");
-                    sb.AppendLine("cast(sum(pb.iNatMoney) over (partition by ph.cPOID)  as decimal(18,2)) as iNatMoney_Total,");
-                    sb.AppendLine("cast(sum(pb.iNatSum) over (partition by ph.cPOID)  as decimal(18,2)) as iNatSum_Total,");
+                    
 
 
-                    sb.AppendLine("cast(pb.iTaxPrice as decimal(18,2)) as iTaxPrice,");
+                    sb.AppendLine("cast(pb.iInvMoney as decimal(18,2)) as iTaxPrice,");
                     sb.AppendLine("cast(pb.iNatInvMoney as decimal(18,2)) as iNatInvMoney,");
                     sb.AppendLine("cast(pb.iOriTotal as decimal(18,2)) as iOriTotal,");
                     sb.AppendLine("cast(pb.iTotal as decimal(18,2)) as iTotal,");
 
-                    sb.AppendLine("cast(sum(pb.iTaxPrice) over (partition by ph.cPOID)  as decimal(18,2)) as iTaxPrice_Total,");
-                    sb.AppendLine("cast(sum(pb.iNatInvMoney) over (partition by ph.cPOID)  as decimal(18,2)) as iNatInvMoney_Total,");
-                    sb.AppendLine("cast(sum(pb.iOriTotal) over (partition by ph.cPOID)  as decimal(18,2)) as iOriTotal_Total,");
-                    sb.AppendLine("cast(sum(pb.iTotal) over (partition by ph.cPOID)  as decimal(18,2)) as iTotal_Total,");
+                    
 
 
                     sb.AppendLine(" CONVERT(nvarchar(30), pt.dPBVDate, 112) as dPBVDate,");
@@ -509,11 +518,7 @@ namespace Print
                     sb.AppendLine("where 1=1 ");
                    // sb.AppendLine("and iTotal<=iNatInvMoney ");
                     sb.AppendLine(condition.ToString());
-                    string s = sb.ToString();
-                    //sb.Remove(0, sb.Length);
-                    //sb.Append("select 'ddadaf' as a union all select '22adasfdasf' union all select 'e2890345fsdklgdst' ");
-
-
+                    sb.AppendLine(") xx");
                     SqlCommand cmdSelect = new SqlCommand(sb.ToString(), this.sqlConnection1);
                     this.sqlConnection1.Open();
                     SqlDataAdapter da = new SqlDataAdapter(cmdSelect);
