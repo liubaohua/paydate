@@ -9,6 +9,16 @@ namespace Print
         public string Text { get; set; }
         public object Value { get; set; }
 
+        public ComboxItem()
+        { 
+        
+        }
+        public ComboxItem(string a, string b)
+        {
+            Text = b;
+            Value = a;
+        }
+
         public override string ToString()
         {
             return Text;

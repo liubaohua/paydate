@@ -34,21 +34,25 @@ namespace Print
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.sqlConnection1 = new System.Data.SqlClient.SqlConnection();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.ucVen2 = new Print.UC1();
-            this.ucVen1 = new Print.UC1();
+            this.cbDir = new System.Windows.Forms.CheckBox();
             this.cbPayTerm2 = new System.Windows.Forms.ComboBox();
+            this.cbOper = new System.Windows.Forms.ComboBox();
+            this.cbVenType = new System.Windows.Forms.ComboBox();
+            this.cbSortField = new System.Windows.Forms.ComboBox();
             this.cbPayTerm1 = new System.Windows.Forms.ComboBox();
+            this.btnPrint = new System.Windows.Forms.Button();
             this.btQry = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tbPocode2 = new System.Windows.Forms.TextBox();
+            this.tbVen = new System.Windows.Forms.TextBox();
             this.tbPoCode1 = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -61,6 +65,8 @@ namespace Print
             this.dtp1 = new Print.FlatDateTimePicker();
             this.button1 = new System.Windows.Forms.Button();
             this.grid1 = new SourceGrid.Grid();
+            this.label13 = new System.Windows.Forms.Label();
+            this.cbSum = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,21 +76,27 @@ namespace Print
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.ucVen2);
-            this.panel1.Controls.Add(this.ucVen1);
+            this.panel1.Controls.Add(this.cbDir);
             this.panel1.Controls.Add(this.cbPayTerm2);
+            this.panel1.Controls.Add(this.cbOper);
+            this.panel1.Controls.Add(this.cbVenType);
+            this.panel1.Controls.Add(this.cbSum);
+            this.panel1.Controls.Add(this.cbSortField);
             this.panel1.Controls.Add(this.cbPayTerm1);
+            this.panel1.Controls.Add(this.btnPrint);
             this.panel1.Controls.Add(this.btQry);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label12);
             this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.label13);
+            this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.tbPocode2);
+            this.panel1.Controls.Add(this.tbVen);
             this.panel1.Controls.Add(this.tbPoCode1);
             this.panel1.Controls.Add(this.label11);
             this.panel1.Controls.Add(this.label9);
@@ -101,19 +113,15 @@ namespace Print
             this.panel1.Size = new System.Drawing.Size(1604, 79);
             this.panel1.TabIndex = 2;
             // 
-            // ucVen2
+            // cbDir
             // 
-            this.ucVen2.Location = new System.Drawing.Point(182, 39);
-            this.ucVen2.Name = "ucVen2";
-            this.ucVen2.Size = new System.Drawing.Size(102, 27);
-            this.ucVen2.TabIndex = 23;
-            // 
-            // ucVen1
-            // 
-            this.ucVen1.Location = new System.Drawing.Point(50, 41);
-            this.ucVen1.Name = "ucVen1";
-            this.ucVen1.Size = new System.Drawing.Size(102, 27);
-            this.ucVen1.TabIndex = 23;
+            this.cbDir.AutoSize = true;
+            this.cbDir.Location = new System.Drawing.Point(1051, 12);
+            this.cbDir.Name = "cbDir";
+            this.cbDir.Size = new System.Drawing.Size(54, 16);
+            this.cbDir.TabIndex = 23;
+            this.cbDir.Text = "正/反";
+            this.cbDir.UseVisualStyleBackColor = true;
             // 
             // cbPayTerm2
             // 
@@ -123,10 +131,40 @@ namespace Print
             "见票付款",
             "月结30天",
             "月结60天"});
-            this.cbPayTerm2.Location = new System.Drawing.Point(832, 12);
+            this.cbPayTerm2.Location = new System.Drawing.Point(795, 12);
             this.cbPayTerm2.Name = "cbPayTerm2";
-            this.cbPayTerm2.Size = new System.Drawing.Size(128, 20);
+            this.cbPayTerm2.Size = new System.Drawing.Size(97, 20);
             this.cbPayTerm2.TabIndex = 22;
+            // 
+            // cbOper
+            // 
+            this.cbOper.FormattingEnabled = true;
+            this.cbOper.Items.AddRange(new object[] {
+            "等于",
+            "包含"});
+            this.cbOper.Location = new System.Drawing.Point(132, 42);
+            this.cbOper.Name = "cbOper";
+            this.cbOper.Size = new System.Drawing.Size(44, 20);
+            this.cbOper.TabIndex = 22;
+            // 
+            // cbVenType
+            // 
+            this.cbVenType.FormattingEnabled = true;
+            this.cbVenType.Items.AddRange(new object[] {
+            "编码",
+            "名称"});
+            this.cbVenType.Location = new System.Drawing.Point(71, 42);
+            this.cbVenType.Name = "cbVenType";
+            this.cbVenType.Size = new System.Drawing.Size(55, 20);
+            this.cbVenType.TabIndex = 22;
+            // 
+            // cbSortField
+            // 
+            this.cbSortField.FormattingEnabled = true;
+            this.cbSortField.Location = new System.Drawing.Point(957, 11);
+            this.cbSortField.Name = "cbSortField";
+            this.cbSortField.Size = new System.Drawing.Size(88, 20);
+            this.cbSortField.TabIndex = 22;
             // 
             // cbPayTerm1
             // 
@@ -136,15 +174,26 @@ namespace Print
             "见票付款",
             "月结30天",
             "月结60天"});
-            this.cbPayTerm1.Location = new System.Drawing.Point(674, 13);
+            this.cbPayTerm1.Location = new System.Drawing.Point(663, 13);
             this.cbPayTerm1.Name = "cbPayTerm1";
-            this.cbPayTerm1.Size = new System.Drawing.Size(129, 20);
+            this.cbPayTerm1.Size = new System.Drawing.Size(103, 20);
             this.cbPayTerm1.TabIndex = 22;
+            // 
+            // btnPrint
+            // 
+            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrint.Location = new System.Drawing.Point(1204, 21);
+            this.btnPrint.Name = "btnPrint";
+            this.btnPrint.Size = new System.Drawing.Size(75, 34);
+            this.btnPrint.TabIndex = 5;
+            this.btnPrint.Text = "打印";
+            this.btnPrint.UseVisualStyleBackColor = true;
+            this.btnPrint.Click += new System.EventHandler(this.btPrint_Click);
             // 
             // btQry
             // 
             this.btQry.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btQry.Location = new System.Drawing.Point(977, 21);
+            this.btQry.Location = new System.Drawing.Point(1114, 21);
             this.btQry.Name = "btQry";
             this.btQry.Size = new System.Drawing.Size(75, 34);
             this.btQry.TabIndex = 5;
@@ -155,7 +204,7 @@ namespace Print
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(809, 43);
+            this.label8.Location = new System.Drawing.Point(772, 43);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(17, 12);
             this.label8.TabIndex = 20;
@@ -164,20 +213,11 @@ namespace Print
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(809, 18);
+            this.label7.Location = new System.Drawing.Point(772, 18);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(17, 12);
             this.label7.TabIndex = 21;
             this.label7.Text = "至";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(158, 45);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(17, 12);
-            this.label6.TabIndex = 18;
-            this.label6.Text = "至";
             // 
             // label12
             // 
@@ -206,10 +246,19 @@ namespace Print
             this.label5.TabIndex = 19;
             this.label5.Text = "至";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(901, 15);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(53, 12);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "排序字段";
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(615, 41);
+            this.label4.Location = new System.Drawing.Point(606, 46);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 15;
@@ -218,7 +267,7 @@ namespace Print
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(615, 18);
+            this.label3.Location = new System.Drawing.Point(604, 18);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 12);
             this.label3.TabIndex = 16;
@@ -235,16 +284,23 @@ namespace Print
             // 
             // tbPocode2
             // 
-            this.tbPocode2.Location = new System.Drawing.Point(832, 41);
+            this.tbPocode2.Location = new System.Drawing.Point(795, 42);
             this.tbPocode2.Name = "tbPocode2";
-            this.tbPocode2.Size = new System.Drawing.Size(130, 21);
+            this.tbPocode2.Size = new System.Drawing.Size(99, 21);
             this.tbPocode2.TabIndex = 10;
+            // 
+            // tbVen
+            // 
+            this.tbVen.Location = new System.Drawing.Point(182, 41);
+            this.tbVen.Name = "tbVen";
+            this.tbVen.Size = new System.Drawing.Size(102, 21);
+            this.tbVen.TabIndex = 11;
             // 
             // tbPoCode1
             // 
-            this.tbPoCode1.Location = new System.Drawing.Point(674, 41);
+            this.tbPoCode1.Location = new System.Drawing.Point(663, 41);
             this.tbPoCode1.Name = "tbPoCode1";
-            this.tbPoCode1.Size = new System.Drawing.Size(127, 21);
+            this.tbPoCode1.Size = new System.Drawing.Size(103, 21);
             this.tbPoCode1.TabIndex = 11;
             // 
             // label11
@@ -351,17 +407,34 @@ namespace Print
             this.grid1.TabStop = true;
             this.grid1.ToolTipText = "";
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(900, 45);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(53, 12);
+            this.label13.TabIndex = 15;
+            this.label13.Text = "合计字段";
+            // 
+            // cbSum
+            // 
+            this.cbSum.FormattingEnabled = true;
+            this.cbSum.Location = new System.Drawing.Point(959, 40);
+            this.cbSum.Name = "cbSum";
+            this.cbSum.Size = new System.Drawing.Size(88, 20);
+            this.cbSum.TabIndex = 22;
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1604, 499);
             this.Controls.Add(this.grid1);
             this.Controls.Add(this.panel1);
-            this.KeyPreview = true;
-            this.KeyDown+=new KeyEventHandler(Form1_KeyDown);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Name = "Form1";
             this.Text = "付款日期查询(演示版)";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -391,7 +464,6 @@ namespace Print
         private System.Windows.Forms.Button btQry;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
@@ -411,9 +483,16 @@ namespace Print
         private FlatDateTimePicker dpt5;
         private System.Windows.Forms.ComboBox cbPayTerm1;
         private System.Windows.Forms.ComboBox cbPayTerm2;
-        private UC1 ucVen1;
-        private UC1 ucVen2;
         private System.Windows.Forms.Button button1;
+        private Button btnPrint;
+        private ComboBox cbOper;
+        private ComboBox cbVenType;
+        private TextBox tbVen;
+        private ComboBox cbSortField;
+        private Label label6;
+        private CheckBox cbDir;
+        private ComboBox cbSum;
+        private Label label13;
 
     }
 }
