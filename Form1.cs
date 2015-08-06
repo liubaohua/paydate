@@ -38,13 +38,10 @@ namespace Print
                 dpt6.CustomFormat = " ";
 
                 InitDatabaseSetting();
-                cbVenType.SelectedIndex = 0;
-                cbOper.SelectedIndex = 0;
-                InitCombox();
-                //ucVen1.setDbInfo("供应商", "select cvencode as 编码,cvenname as 名称 from vendor order by cvencode", "编码", "编码", "名称");
-                //ucVen2.setDbInfo("供应商", "select cvencode as 编码,cvenname as 名称 from vendor order by cvencode", "编码", "编码", "名称");
-                //ucVen1.setParentForm(this);
-                //ucVen2.setParentForm(this);
+                ucVen1.setDbInfo("供应商", "select cvencode as 编码,cvenname as 名称 from vendor order by cvencode", "编码", "编码", "名称");
+                ucVen2.setDbInfo("供应商", "select cvencode as 编码,cvenname as 名称 from vendor order by cvencode", "编码", "编码", "名称");
+                ucVen1.setParentForm(this);
+                ucVen2.setParentForm(this);
                 
             }
             catch (Exception e)
@@ -52,14 +49,6 @@ namespace Print
                 MessageBox.Show(e.Message+"\n"+e.StackTrace,"");
             }
            
-        }
-
-        private void InitCombox()
-        {
-            getItems();
-            for (int i = 1; i < columnitems.Length;i++ )
-                cbSortField.Items.Add(columnitems[i]);
-            
         }
 
         
@@ -316,87 +305,12 @@ namespace Print
            
 
         }
-       private ComboxItem[] columnitems = null;
-       private ComboxItem[] getItems()
-       {
-           if (columnitems == null)
-           {
-               List<ComboxItem> list = new List<ComboxItem>();
-               ComboxItem item = new ComboxItem("序号", "序号");
-               list.Add(item);
-               item = new ComboxItem("cPOID", "订单号");
-               list.Add(item);
-               item = new ComboxItem("cmaketime", "日期");
-               list.Add(item);
-               item = new ComboxItem("cVenName", "供应商");
-               list.Add(item);
-               item = new ComboxItem("cexch_name", "币种");
-               list.Add(item);
-               item = new ComboxItem("cInvCode", "存货编码");
-               list.Add(item);
-               item = new ComboxItem("cInvName", "存货名称");
-               list.Add(item);
-               item = new ComboxItem("cInvStd", "规格型号");
-               list.Add(item);
-               item = new ComboxItem("cInvAddCode", "存货代码");
-               list.Add(item);
-               item = new ComboxItem("cComUnitName", "单位");
-               list.Add(item);
-               item = new ComboxItem("iQuantity", "数量");
-               list.Add(item);
-               item = new ComboxItem("iMoney", "原币无税金额");
-               list.Add(item);
-               item = new ComboxItem("iSum", "原币含税金额");
-               list.Add(item);
-               item = new ComboxItem("iNatMoney", "本币无税金额");
-               list.Add(item);
-               item = new ComboxItem("iNatSum", "本币含税金额");
-               list.Add(item);
-               item = new ComboxItem("iMoney_Total", "原币无税金额合计");
-               list.Add(item);
-               item = new ComboxItem("iSum_Total", "原币含税金额合计");
-               list.Add(item);
-               item = new ComboxItem("iNatMoney_Total", "本币无税金额合计");
-               list.Add(item);
-               item = new ComboxItem("iNatSum_Total", "本币含税金额合计");
-               list.Add(item);
-               item = new ComboxItem("iTaxPrice", "原币发票金额");
-               list.Add(item);
-               item = new ComboxItem("iNatInvMoney", "本币发票金额");
-               list.Add(item);
-               item = new ComboxItem("iOriTotal", "原币付款");
-               list.Add(item);
-               item = new ComboxItem("iTotal", "本币付款");
-               list.Add(item);
-               item = new ComboxItem("iTaxPrice_Total", "原币发票金额合计");
-               list.Add(item);
-               item = new ComboxItem("iNatInvMoney_Total", "本币发票金额合计");
-               list.Add(item);
-               item = new ComboxItem("iOriTotal_Total", "原币付款合计");
-               list.Add(item);
-               item = new ComboxItem("iTotal_Total", "本币付款合计");
-               list.Add(item);
-               item = new ComboxItem("dPBVDate", "开票日期");
-               list.Add(item);
-               item = new ComboxItem("PayTerm", "付款条件");
-               list.Add(item);
-               item = new ComboxItem("PayDate", "付款日期");
-               list.Add(item);
-               item = new ComboxItem("cmaker", "制单人");
-               list.Add(item);
-               columnitems = list.ToArray();  
-           }
-           return columnitems;
-       }
-
 
 
        private void DoFull1(DataTable dt)
        {
-           ComboxItem[] items = getItems();
-
-           //string[] titles = new string[] { "序号", "订单号", "日期", "供应商", "币种", "存货编码", "存货名称", "规格型号", "存货代码", "单位", "数量", "原币无税金额", "原币含税金额", "本币无税金额", "本币含税金额", "原币无税金额合计", "原币含税金额合计", "本币无税金额合计", "本币含税金额合计", "原币发票金额", "本币发票金额", "原币付款", "本币付款", "原币发票金额合计", "本币发票金额合计", "原币付款合计", "本币付款合计", "开票日期", "付款条件", "付款日期", "制单人" };
-           //grid2.Redim(1, titles.Length);
+           string[] titles = new string[] { "序号", "订单号", "日期", "供应商", "币种", "存货编码", "存货名称", "规格型号", "存货代码", "单位", "数量", "原币无税金额", "原币含税金额", "本币无税金额", "本币含税金额", "原币无税金额合计", "原币含税金额合计", "本币无税金额合计", "本币含税金额合计", "原币发票金额", "本币发票金额", "原币付款", "本币付款", "原币发票金额合计", "本币发票金额合计", "原币付款合计", "本币付款合计", "开票日期", "付款条件", "付款日期", "制单人" };
+           
            if (dt.Rows.Count > 0)
            {
                grid1.Redim(1, dt.Columns.Count - 2);
@@ -404,17 +318,15 @@ namespace Print
            }
            else
            {
-               grid1.Redim(1, items.Length);
+               grid1.Redim(1, titles.Length);
            }
 
            grid1.FixedRows = 1;
-           //grid2.FixedRows = 1;
+           
+           
+           for (int i = 0; i < titles.Length;i++)
+               grid1[0, i] = new MyHeader(titles[i]);
 
-
-           for (int i = 0; i < items.Length; i++)
-               grid1[0, i] = new MyHeader(items[i].Text);
-          // for (int i = 0; i < titles.Length; i++)
-               //grid2[0, i] = new MyHeader(titles[i]);
            
            //grid1[0, 0].ColumnSpan = 3;
            // grid1[0, 0].AddController(new SourceGrid.Cells.Controllers.SortableHeader());
@@ -423,17 +335,15 @@ namespace Print
            //grid1[1, 0].RowSpan = 2;
            //grid1[1, 1] = new SourceGrid.Cells.Cell("ddddd", typeof(string));
            //grid1[2, 1] = new SourceGrid.Cells.Cell("dfaddd", typeof(string));
-
            for (int i = 0; i < dt.Rows.Count; i++)
            {
                int cnt = int.Parse(dt.Rows[i]["cnt"].ToString());
-               
+
                grid1[i+1, 0] = new SourceGrid.Cells.Cell(dt.Rows[i]["序号"].ToString(), typeof(int));
               // grid1[i+1, ++col] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPOID"].ToString(), typeof(string));
                if(i==0 || (i>0 && !dt.Rows[i]["cPOID"].ToString().Equals(dt.Rows[i-1]["cPOID"].ToString())))
                {
                    grid1[i + 1, 1] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPOID"].ToString(), typeof(string));
-                   
                    grid1[i + 1, 2] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaketime"].ToString(), typeof(string));
                    grid1[i + 1, 3] = new SourceGrid.Cells.Cell(dt.Rows[i]["cVenName"].ToString(), typeof(string));
                    grid1[i + 1, 4] = new SourceGrid.Cells.Cell(dt.Rows[i]["cexch_name"].ToString(), typeof(string));
@@ -447,7 +357,6 @@ namespace Print
                    grid1[i + 1, 24] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatInvMoney_Total"].ToString(), typeof(decimal));
                    grid1[i + 1, 25] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal_Total"].ToString(), typeof(decimal));
                    grid1[i + 1, 26] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal_Total"].ToString(), typeof(decimal));
-                   grid1[i + 1, 26].View.TextAlignment = DevAge.Drawing.ContentAlignment.MiddleRight;
 
                     if (cnt > 1)
                     {
@@ -522,20 +431,6 @@ namespace Print
            }
        }
 
-       private string getVenType(int i)
-       {
-           if (i == 0)
-               return "cvencode";
-           return "cvenname";
-       }
-
-       private string getOperType(int i,string value)
-       {
-           if (i == 0)
-               return " = '" + value+"'";
-           return " like '%" + value + "%'";
-           
-       }
 
         private void btQry_Click(object sender, EventArgs e)
         {
@@ -547,20 +442,14 @@ namespace Print
                 try
                 {
                     StringBuilder condition = new StringBuilder();
-                    StringBuilder orderbystr = new StringBuilder("order by paydate,cVenCode");
-                    StringBuilder groupbystr = new StringBuilder("partition by cPOID");//cvencode
-
                     if (dtp1.Text.Trim().Equals("") || dtp2.Text.Trim().Equals(""))
                     {
                         MessageBox.Show("请您选择付款日期", "提示");
                         return;
                     }
-                    if(cbSortField.SelectedIndex>=0)
-                        orderbystr = new StringBuilder("order by "+(cbSortField.SelectedItem as ComboxItem).Value);
 
-                    if(cbVenType.SelectedIndex>=0 && cbOper.SelectedIndex>0 && !tbVen.Text.Equals(""))
-                    //if (ucVen1.getSelectID() != null && ucVen2.getSelectID() != null)
-                        condition.Append(" and " + getVenType(cbVenType.SelectedIndex) + getOperType(cbOper.SelectedIndex, tbVen.Text));
+                    if (ucVen1.getSelectID() != null && ucVen2.getSelectID() != null)
+                        condition.Append(" and cVenCode>='" + ucVen1.getSelectID() + "' and cVenCode<='" + ucVen2.getSelectID() + "' ");
                     //付款日期
                     if (!dtp1.Text.Trim().Equals("") && !dtp2.Text.Trim().Equals(""))
                         condition.Append(" and PayDate>='" + String.Format("{0:yyyy-MM-dd}", dtp1.Text) + "' and PayDate<='" + String.Format("{0:yyyy-MM-dd}", dtp2.Text) + "' ");
@@ -579,27 +468,63 @@ namespace Print
 
           
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendLine("select row_number() over (" + orderbystr.ToString() + ") as 序号,count(1) over (partition by cPOID) as cnt,count(1) over (partition by cvencode) as cnt_ven,");
+                    sb.AppendLine("select count(1) over (partition by cPOID) as cnt,");
 
-                    sb.AppendLine("cast(sum(iMoney) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iMoney_Total,");
-                    sb.AppendLine("cast(sum(iSum) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iSum_Total,");
-                    sb.AppendLine("cast(sum(iNatMoney) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iNatMoney_Total,");
-                    sb.AppendLine("cast(sum(iNatSum) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iNatSum_Total,");
+                    sb.AppendLine("cast(sum(iMoney) over (partition by cPOID)  as decimal(18,2)) as iMoney_Total,");
+                    sb.AppendLine("cast(sum(iSum) over (partition by cPOID)  as decimal(18,2)) as iSum_Total,");
+                    sb.AppendLine("cast(sum(iNatMoney) over (partition by cPOID)  as decimal(18,2)) as iNatMoney_Total,");
+                    sb.AppendLine("cast(sum(iNatSum) over (partition by cPOID)  as decimal(18,2)) as iNatSum_Total,");
 
-                    sb.AppendLine("cast(sum(iTaxPrice) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iTaxPrice_Total,");
-                    sb.AppendLine("cast(sum(iNatInvMoney) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iNatInvMoney_Total,");
-                    sb.AppendLine("cast(sum(iOriTotal) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iOriTotal_Total,");
-                    sb.AppendLine("cast(sum(iTotal) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iTotal_Total,");
 
-                    sb.AppendLine("t.* from Myview t ");
-                    sb.AppendLine("where isnull(iTotal,0)<isnull(iNatInvMoney,0) ");
+                    sb.AppendLine("cast(sum(iTaxPrice) over (partition by cPOID)  as decimal(18,2)) as iTaxPrice_Total,");
+                    sb.AppendLine("cast(sum(iNatInvMoney) over (partition by cPOID)  as decimal(18,2)) as iNatInvMoney_Total,");
+                    sb.AppendLine("cast(sum(iOriTotal) over (partition by cPOID)  as decimal(18,2)) as iOriTotal_Total,");
+                    sb.AppendLine("cast(sum(iTotal) over (partition by cPOID)  as decimal(18,2)) as iTotal_Total,");
+
+
+                    sb.AppendLine("xx.* from (select row_number() over (order by aa.cPOID) as 序号,aa.* from (select ph.cPOID,CONVERT(nvarchar(30), ph.dpodate, 112) as cmaketime,v.cVenCode,v.cVenName,ph.cexch_name,pb.cInvCode,i.cInvName,i.cInvStd,i.cInvAddCode,cu.cComUnitName,");
+
+                    sb.AppendLine("cast(pb.iQuantity as decimal(18,2)) as iQuantity,");
+                    sb.AppendLine("cast(pb.iMoney as decimal(18,2)) as iMoney,");
+                    sb.AppendLine("cast(pb.iSum as decimal(18,2)) as iSum,");
+                    sb.AppendLine("cast(pb.iNatMoney as decimal(18,2)) as iNatMoney,");
+                    sb.AppendLine("cast(pb.iNatSum as decimal(18,2)) as iNatSum,");
+
+                    
+
+
+                    sb.AppendLine("cast(pb.iInvMoney as decimal(18,2)) as iTaxPrice,");
+                    sb.AppendLine("cast(pb.iNatInvMoney as decimal(18,2)) as iNatInvMoney,");
+                    sb.AppendLine("cast(pb.iOriTotal as decimal(18,2)) as iOriTotal,");
+                    sb.AppendLine("cast(pb.iTotal as decimal(18,2)) as iTotal,");
+
+                    
+
+
+                    sb.AppendLine(" CONVERT(nvarchar(30), pt.dPBVDate, 112) as dPBVDate,");
+                    sb.AppendLine("v.cVenDefine1 as PayTerm,");
+                    sb.AppendLine("(case when v.cVenDefine1='预付款' then CONVERT(nvarchar(30), ph.cAuditDate, 112) ");
+                    sb.AppendLine("when v.cVenDefine1='见票付款' then CONVERT(nvarchar(30), pt.dPBVDate, 112) ");
+                    sb.AppendLine("when v.cVenDefine1='月结30天' then CONVERT(nvarchar(30), pt.dPBVDate+30, 112)");
+                    sb.AppendLine("when v.cVenDefine1='月结60天' then CONVERT(nvarchar(30), pt.dPBVDate+60, 112)");
+                    sb.AppendLine("end ) as PayDate,");
+                    sb.AppendLine("ph.cmaker ");
+                    sb.AppendLine("from PO_Pomain ph inner join Po_PoDetails pb on ph.POID=pb.POID");
+                    sb.AppendLine("inner join Inventory i on pb.cInvCode = i.cInvCode");
+                    sb.AppendLine("inner join ComputationUnit cu on cu.cComunitCode  = i.cComUnitCode");
+                    sb.AppendLine("inner join Vendor v on v.cVencode = ph.cVencode");
+                    sb.AppendLine("inner join (select pvb.iPOsID,max(pvh.dPBVDate) as dPBVDate from PurBillVouchs pvb inner join PurBillVouch pvh on pvh.PBVID = pvb.PBVID group by pvb.iPOsID) pt");
+                    sb.AppendLine("on pt.iPOsID= pb.ID ) aa");
+                    sb.AppendLine("where 1=1 ");
+                   // sb.AppendLine("and iTotal<=iNatInvMoney ");
                     sb.AppendLine(condition.ToString());
-                    sb.AppendLine(" " + orderbystr.ToString());
+                    sb.AppendLine(") xx");
                     SqlCommand cmdSelect = new SqlCommand(sb.ToString(), this.sqlConnection1);
                     this.sqlConnection1.Open();
                     SqlDataAdapter da = new SqlDataAdapter(cmdSelect);
                     System.Data.DataTable dt = new System.Data.DataTable();
                     da.Fill(dt);
+                   // dvResult.DataSource = dt;
                     DoFull1(dt);
                     
 
@@ -783,20 +708,6 @@ namespace Print
         private void button2_Click_1(object sender, EventArgs e)
         {
 
-        }
-
-        private void btPrint_Click(object sender, EventArgs e)
-        {
-			PrintPreviewDialog dlg = new PrintPreviewDialog();
-			SourceGrid.Exporter.GridPrintDocument pd = new SourceGrid.Exporter.GridPrintDocument(this.grid1);
-            
-			pd.RangeToPrint = new SourceGrid.Range(0, 0, this.grid1.Rows.Count - 1, this.grid1.Columns.Count - 1);
-			//pd.PageHeaderText = "Print sample\t\tSourceGrid print document sample";
-			//pd.PageTitleText = "\tSample grid";
-			//pd.PageFooterText = "\tPage [PageNo] from [PageCount]";
-			dlg.Document = pd;
-           
-			dlg.ShowDialog(this);
         }
     }
 }
