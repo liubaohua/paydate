@@ -1,0 +1,18 @@
+﻿create view Myview as 
+SELECT     ph.cPOID, CONVERT(nvarchar(30), ph.dPODate, 112) AS cmaketime, v.cVenCode, v.cVenName, ph.cexch_name, pb.cInvCode, i.cInvName, i.cInvStd, i.cInvAddCode, 
+                      cu.cComUnitName, CAST(pb.iQuantity AS decimal(18, 2)) AS iQuantity, CAST(pb.iMoney AS decimal(18, 2)) AS iMoney, CAST(pb.iSum AS decimal(18, 2)) AS iSum, 
+                      CAST(pb.iNatMoney AS decimal(18, 2)) AS iNatMoney, CAST(pb.iNatSum AS decimal(18, 2)) AS iNatSum, CAST(pb.iInvMoney AS decimal(18, 2)) AS iTaxPrice, 
+                      CAST(pb.iNatInvMoney AS decimal(18, 2)) AS iNatInvMoney, CAST(pt.iOriTotal AS decimal(18, 2)) AS iOriTotal, CAST(pt.iTotal AS decimal(18, 2)) AS iTotal, 
+                      CONVERT(nvarchar(30), pt.dPBVDate, 112) AS dPBVDate, v.cVenDefine1 AS PayTerm, (CASE WHEN v.cVenDefine1 = '预付款' THEN CONVERT(nvarchar(30), 
+                      ph.cAuditDate, 112) WHEN v.cVenDefine1 = '见票付款' THEN CONVERT(nvarchar(30), pt.dPBVDate, 112) 
+                      WHEN v.cVenDefine1 = '月结30天' THEN CONVERT(nvarchar(30), pt.dPBVDate + 30, 112) WHEN v.cVenDefine1 = '月结60天' THEN CONVERT(nvarchar(30), 
+                      pt.dPBVDate + 60, 112) END) AS PayDate, ph.cMaker
+FROM         dbo.PO_Pomain AS ph INNER JOIN
+                      dbo.PO_Podetails AS pb ON ph.POID = pb.POID INNER JOIN
+                      dbo.Inventory AS i ON pb.cInvCode = i.cInvCode INNER JOIN
+                      dbo.ComputationUnit AS cu ON cu.cComunitCode = i.cComUnitCode INNER JOIN
+                      dbo.Vendor AS v ON v.cVenCode = ph.cVenCode INNER JOIN
+                          (SELECT     pvb.iPOsID,iOriTotal,itotal, pvh.dPBVDate
+                            FROM          dbo.PurBillVouchs AS pvb INNER JOIN
+                                                   dbo.PurBillVouch AS pvh ON pvh.PBVID = pvb.PBVID
+where iPOsID is not null ) AS pt ON pt.iPOsID = pb.ID
