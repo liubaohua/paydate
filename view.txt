@@ -1,18 +1,37 @@
-﻿create view Myview as 
+﻿--drop view Myview 
+create view MyView as
+select lt.*,pt.*,(case when lt.PayTerm='预付款' then CONVERT(nvarchar(30), lt.cAuditDate, 112)   
+		when lt.PayTerm='见票付款' then CONVERT(nvarchar(30), pt.dPBVDate, 112)   
+		when lt.PayTerm='月结30天' then CONVERT(nvarchar(30), pt.dPBVDate+30, 112)  
+		when lt.PayTerm='月结60天' then CONVERT(nvarchar(30), pt.dPBVDate+60, 112)  
+		end ) as PayDate ,
+		SUM(iOriTotal) over (PARTITION by lt.cPOID) iOriTotal_total,SUM(itotal) over (PARTITION by lt.cPOID) itotal_total
+		
+from (
 SELECT     ph.cPOID, CONVERT(nvarchar(30), ph.dPODate, 112) AS cmaketime, v.cVenCode, v.cVenName, ph.cexch_name, pb.cInvCode, i.cInvName, i.cInvStd, i.cInvAddCode, 
                       cu.cComUnitName, CAST(pb.iQuantity AS decimal(18, 2)) AS iQuantity, CAST(pb.iMoney AS decimal(18, 2)) AS iMoney, CAST(pb.iSum AS decimal(18, 2)) AS iSum, 
                       CAST(pb.iNatMoney AS decimal(18, 2)) AS iNatMoney, CAST(pb.iNatSum AS decimal(18, 2)) AS iNatSum, CAST(pb.iInvMoney AS decimal(18, 2)) AS iTaxPrice, 
-                      CAST(pb.iNatInvMoney AS decimal(18, 2)) AS iNatInvMoney, CAST(pt.iOriTotal AS decimal(18, 2)) AS iOriTotal, CAST(pt.iTotal AS decimal(18, 2)) AS iTotal, 
-                      CONVERT(nvarchar(30), pt.dPBVDate, 112) AS dPBVDate, v.cVenDefine1 AS PayTerm, (CASE WHEN v.cVenDefine1 = '预付款' THEN CONVERT(nvarchar(30), 
-                      ph.cAuditDate, 112) WHEN v.cVenDefine1 = '见票付款' THEN CONVERT(nvarchar(30), pt.dPBVDate, 112) 
-                      WHEN v.cVenDefine1 = '月结30天' THEN CONVERT(nvarchar(30), pt.dPBVDate + 30, 112) WHEN v.cVenDefine1 = '月结60天' THEN CONVERT(nvarchar(30), 
-                      pt.dPBVDate + 60, 112) END) AS PayDate, ph.cMaker
+                      CAST(pb.iNatInvMoney AS decimal(18, 2)) AS iNatInvMoney,
+                       v.cVenDefine1 AS PayTerm,
+cast(sum(iMoney) over (partition by ph.cPOID)  as decimal(18,2)) as iMoney_Total,
+cast(sum(iSum) over (partition by ph.cPOID)  as decimal(18,2)) as iSum_Total,
+cast(sum(iNatMoney) over (partition by ph.cPOID)  as decimal(18,2)) as iNatMoney_Total,
+cast(sum(iNatSum) over (partition by ph.cPOID)  as decimal(18,2)) as iNatSum_Total,
+cast(sum(iInvMoney) over (partition by ph.cPOID)  as decimal(18,2)) as iTaxPrice_Total,
+cast(sum(iNatInvMoney) over (partition by ph.cPOID)  as decimal(18,2)) as iNatInvMoney_Total,
+--cast(sum(iOriTotal) over (partition by cPOID)  as decimal(18,2)) as iOriTotal_Total,
+--cast(sum(iTotal) over (partition by cPOID)  as decimal(18,2)) as iTotal_Total,
+   
+  ph.cMaker, pb.id as pbid, ph.POID as phid,ph.cAuditDate,pb.ivouchrowno 
 FROM         dbo.PO_Pomain AS ph INNER JOIN
-                      dbo.PO_Podetails AS pb ON ph.POID = pb.POID INNER JOIN
-                      dbo.Inventory AS i ON pb.cInvCode = i.cInvCode INNER JOIN
-                      dbo.ComputationUnit AS cu ON cu.cComunitCode = i.cComUnitCode INNER JOIN
-                      dbo.Vendor AS v ON v.cVenCode = ph.cVenCode INNER JOIN
-                          (SELECT     pvb.iPOsID,iOriTotal,itotal, pvh.dPBVDate
-                            FROM          dbo.PurBillVouchs AS pvb INNER JOIN
-                                                   dbo.PurBillVouch AS pvh ON pvh.PBVID = pvb.PBVID
-where iPOsID is not null ) AS pt ON pt.iPOsID = pb.ID
+  dbo.PO_Podetails AS pb ON ph.POID = pb.POID INNER JOIN
+  dbo.Inventory AS i ON pb.cInvCode = i.cInvCode INNER JOIN
+  dbo.ComputationUnit AS cu ON cu.cComunitCode = i.cComUnitCode INNER JOIN
+  dbo.Vendor AS v ON v.cVenCode = ph.cVenCode) lt
+  
+  
+   LEFT JOIN
+      (SELECT     pvb.iPOsID,iOriTotal,iTotal, CONVERT(nvarchar(30), pvh.dPBVDate, 112) AS dPBVDate--,SUM(iOriTotal) over (PARTITION by iposid) iOriTotal_total,SUM(itotal) over (PARTITION by iposid) itotal_total
+        FROM          dbo.PurBillVouchs AS pvb INNER JOIN
+                               dbo.PurBillVouch AS pvh ON pvh.PBVID = pvb.PBVID
+where iPOsID is not null ) AS pt ON pt.iPOsID = lt.pbid and ( not (lt.PayTerm!='预付款' and pt.dPBVDate is null) or lt.PayTerm='预付款')

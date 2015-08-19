@@ -57,8 +57,8 @@ namespace Print
         private void InitCombox()
         {
             getItems();
-            for (int i = 1; i < columnitems.Length; i++)
-                cbSortField.Items.Add(columnitems[i]);
+            //for (int i = 1; i < columnitems.Length; i++)
+            //    cbSortField.Items.Add(columnitems[i]);
 
         }
 
@@ -376,6 +376,8 @@ namespace Print
                 list.Add(item);
                 item = new ComboxItem("iTotal_Total", "本币付款合计");
                 list.Add(item);
+                item = new ComboxItem("ivouchrowno", "订单行号");
+                list.Add(item);
                 item = new ComboxItem("dPBVDate", "开票日期");
                 list.Add(item);
                 item = new ComboxItem("PayTerm", "付款条件");
@@ -448,7 +450,7 @@ namespace Print
                     grid1[i + 1, 25] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal_Total"].ToString(), typeof(decimal));
                     grid1[i + 1, 26] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal_Total"].ToString(), typeof(decimal));
                     grid1[i + 1, 26].View.TextAlignment = DevAge.Drawing.ContentAlignment.MiddleRight;
-
+                    
                     if (cnt > 1)
                     {
                         grid1[i + 1, 1].RowSpan = cnt;
@@ -494,10 +496,11 @@ namespace Print
                 //grid1[i+1, 24] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatInvMoney_Total"].ToString(), typeof(decimal));
                 //grid1[i+1, 25] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal_Total"].ToString(), typeof(decimal));
                 //grid1[i+1, 26] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal_Total"].ToString(), typeof(decimal));
-                grid1[i + 1, 27] = new SourceGrid.Cells.Cell(dt.Rows[i]["dPBVDate"].ToString(), typeof(string));
-                grid1[i + 1, 28] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayTerm"].ToString(), typeof(string));
-                grid1[i + 1, 29] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayDate"].ToString(), typeof(string));
-                grid1[i + 1, 30] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaker"].ToString(), typeof(string));
+                grid1[i + 1, 27] = new SourceGrid.Cells.Cell(dt.Rows[i]["ivouchrowno"].ToString(), typeof(string));
+                grid1[i + 1, 28] = new SourceGrid.Cells.Cell(dt.Rows[i]["dPBVDate"].ToString(), typeof(string));
+                grid1[i + 1, 29] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayTerm"].ToString(), typeof(string));
+                grid1[i + 1, 30] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayDate"].ToString(), typeof(string));
+                grid1[i + 1, 31] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaker"].ToString(), typeof(string));
 
             }
             //grid1.AutoStretchColumnsToFitWidth = true; 
@@ -547,7 +550,7 @@ namespace Print
             try
             {
                 StringBuilder condition = new StringBuilder();
-                StringBuilder orderbystr = new StringBuilder("order by paydate,cVenCode");
+                StringBuilder orderbystr = new StringBuilder("order by CPOID,ivouchrowno");
                 StringBuilder groupbystr = new StringBuilder("partition by cPOID");//cvencode
 
                 if (dtp1.Text.Trim().Equals("") || dtp2.Text.Trim().Equals(""))
@@ -555,10 +558,10 @@ namespace Print
                     MessageBox.Show("请您选择付款日期", "提示");
                     return;
                 }
-                if (cbSortField.SelectedIndex >= 0)
-                    orderbystr = new StringBuilder("order by " + (cbSortField.SelectedItem as ComboxItem).Value);
+                //if (cbSortField.SelectedIndex >= 0)
+                //    orderbystr = new StringBuilder("order by " + (cbSortField.SelectedItem as ComboxItem).Value);
 
-                if (cbVenType.SelectedIndex >= 0 && cbOper.SelectedIndex > 0 && !tbVen.Text.Equals(""))
+                if (cbVenType.SelectedIndex >= 0 && cbOper.SelectedIndex>= 0 && !tbVen.Text.Equals(""))
                     //if (ucVen1.getSelectID() != null && ucVen2.getSelectID() != null)
                     condition.Append(" and " + getVenType(cbVenType.SelectedIndex) + getOperType(cbOper.SelectedIndex, tbVen.Text));
                 //付款日期
@@ -581,18 +584,19 @@ namespace Print
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("select row_number() over (" + orderbystr.ToString() + ") as 序号,count(1) over (partition by cPOID) as cnt,count(1) over (partition by cvencode) as cnt_ven,");
 
-                sb.AppendLine("cast(sum(iMoney) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iMoney_Total,");
-                sb.AppendLine("cast(sum(iSum) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iSum_Total,");
-                sb.AppendLine("cast(sum(iNatMoney) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iNatMoney_Total,");
-                sb.AppendLine("cast(sum(iNatSum) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iNatSum_Total,");
+                //sb.AppendLine("cast(sum(iMoney) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iMoney_Total,");
+                //sb.AppendLine("cast(sum(iSum) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iSum_Total,");
+                //sb.AppendLine("cast(sum(iNatMoney) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iNatMoney_Total,");
+                //sb.AppendLine("cast(sum(iNatSum) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iNatSum_Total,");
 
-                sb.AppendLine("cast(sum(iTaxPrice) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iTaxPrice_Total,");
-                sb.AppendLine("cast(sum(iNatInvMoney) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iNatInvMoney_Total,");
-                sb.AppendLine("cast(sum(iOriTotal) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iOriTotal_Total,");
-                sb.AppendLine("cast(sum(iTotal) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iTotal_Total,");
+                //sb.AppendLine("cast(sum(iTaxPrice) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iTaxPrice_Total,");
+                //sb.AppendLine("cast(sum(iNatInvMoney) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iNatInvMoney_Total,");
+                //sb.AppendLine("cast(sum(iOriTotal) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iOriTotal_Total,");
+                //sb.AppendLine("cast(sum(iTotal) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iTotal_Total,");
 
                 sb.AppendLine("t.* from Myview t ");
-                sb.AppendLine("where isnull(iTotal,0)<isnull(iNatInvMoney,0) ");
+                sb.AppendLine("where (isnull(iTotal,0)<isnull(iNatInvMoney,0) or PayTerm='预付款') ");
+              //  sb.AppendLine("where 1=1 ");
                 sb.AppendLine(condition.ToString());
                 sb.AppendLine(" " + orderbystr.ToString());
                 SqlCommand cmdSelect = new SqlCommand(sb.ToString(), this.sqlConnection1);
@@ -787,16 +791,35 @@ namespace Print
 
         private void btPrint_Click(object sender, EventArgs e)
         {
-            PrintPreviewDialog dlg = new PrintPreviewDialog();
-            SourceGrid.Exporter.GridPrintDocument pd = new SourceGrid.Exporter.GridPrintDocument(this.grid1);
+            try
+            {
+                string l_Path = System.IO.Path.Combine("c:\\", "output.csv");
 
-            pd.RangeToPrint = new SourceGrid.Range(0, 0, this.grid1.Rows.Count - 1, this.grid1.Columns.Count - 1);
-            //pd.PageHeaderText = "Print sample\t\tSourceGrid print document sample";
-            //pd.PageTitleText = "\tSample grid";
-            //pd.PageFooterText = "\tPage [PageNo] from [PageCount]";
-            dlg.Document = pd;
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(l_Path, false, System.Text.Encoding.Default))
+                {
+                    SourceGrid.Exporter.CSV csv = new SourceGrid.Exporter.CSV();
+                    csv.Export(grid1, writer);
+                    writer.Close();
+                }
 
-            dlg.ShowDialog(this);
+                DevAge.Shell.Utilities.OpenFile(l_Path);
+            }
+            catch (Exception err)
+            {
+                DevAge.Windows.Forms.ErrorDialog.Show(this, err, "CSV Export Error");
+            }
+
+          
+            //PrintPreviewDialog dlg = new PrintPreviewDialog();
+            //SourceGrid.Exporter.GridPrintDocument pd = new SourceGrid.Exporter.GridPrintDocument(this.grid1);
+
+            //pd.RangeToPrint = new SourceGrid.Range(0, 0, this.grid1.Rows.Count - 1, this.grid1.Columns.Count - 1);
+            ////pd.PageHeaderText = "Print sample\t\tSourceGrid print document sample";
+            ////pd.PageTitleText = "\tSample grid";
+            ////pd.PageFooterText = "\tPage [PageNo] from [PageCount]";
+            //dlg.Document = pd;
+
+            //dlg.ShowDialog(this);
         }
     }
 }

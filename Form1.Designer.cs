@@ -34,11 +34,9 @@ namespace Print
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.sqlConnection1 = new System.Data.SqlClient.SqlConnection();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.cbDir = new System.Windows.Forms.CheckBox();
             this.cbPayTerm2 = new System.Windows.Forms.ComboBox();
             this.cbOper = new System.Windows.Forms.ComboBox();
             this.cbVenType = new System.Windows.Forms.ComboBox();
-            this.cbSortField = new System.Windows.Forms.ComboBox();
             this.cbPayTerm1 = new System.Windows.Forms.ComboBox();
             this.btnPrint = new System.Windows.Forms.Button();
             this.btQry = new System.Windows.Forms.Button();
@@ -47,7 +45,6 @@ namespace Print
             this.label12 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -65,8 +62,6 @@ namespace Print
             this.dtp1 = new Print.FlatDateTimePicker();
             this.button1 = new System.Windows.Forms.Button();
             this.grid1 = new SourceGrid.Grid();
-            this.label13 = new System.Windows.Forms.Label();
-            this.cbSum = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,12 +71,9 @@ namespace Print
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.cbDir);
             this.panel1.Controls.Add(this.cbPayTerm2);
             this.panel1.Controls.Add(this.cbOper);
             this.panel1.Controls.Add(this.cbVenType);
-            this.panel1.Controls.Add(this.cbSum);
-            this.panel1.Controls.Add(this.cbSortField);
             this.panel1.Controls.Add(this.cbPayTerm1);
             this.panel1.Controls.Add(this.btnPrint);
             this.panel1.Controls.Add(this.btQry);
@@ -90,8 +82,6 @@ namespace Print
             this.panel1.Controls.Add(this.label12);
             this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.label13);
-            this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
@@ -112,16 +102,6 @@ namespace Print
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1604, 79);
             this.panel1.TabIndex = 2;
-            // 
-            // cbDir
-            // 
-            this.cbDir.AutoSize = true;
-            this.cbDir.Location = new System.Drawing.Point(1051, 12);
-            this.cbDir.Name = "cbDir";
-            this.cbDir.Size = new System.Drawing.Size(54, 16);
-            this.cbDir.TabIndex = 23;
-            this.cbDir.Text = "正/反";
-            this.cbDir.UseVisualStyleBackColor = true;
             // 
             // cbPayTerm2
             // 
@@ -158,14 +138,6 @@ namespace Print
             this.cbVenType.Size = new System.Drawing.Size(55, 20);
             this.cbVenType.TabIndex = 22;
             // 
-            // cbSortField
-            // 
-            this.cbSortField.FormattingEnabled = true;
-            this.cbSortField.Location = new System.Drawing.Point(957, 11);
-            this.cbSortField.Name = "cbSortField";
-            this.cbSortField.Size = new System.Drawing.Size(88, 20);
-            this.cbSortField.TabIndex = 22;
-            // 
             // cbPayTerm1
             // 
             this.cbPayTerm1.FormattingEnabled = true;
@@ -182,18 +154,18 @@ namespace Print
             // btnPrint
             // 
             this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPrint.Location = new System.Drawing.Point(1204, 21);
+            this.btnPrint.Location = new System.Drawing.Point(1035, 18);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(75, 34);
             this.btnPrint.TabIndex = 5;
-            this.btnPrint.Text = "打印";
+            this.btnPrint.Text = "导出";
             this.btnPrint.UseVisualStyleBackColor = true;
             this.btnPrint.Click += new System.EventHandler(this.btPrint_Click);
             // 
             // btQry
             // 
             this.btQry.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btQry.Location = new System.Drawing.Point(1114, 21);
+            this.btQry.Location = new System.Drawing.Point(921, 18);
             this.btQry.Name = "btQry";
             this.btQry.Size = new System.Drawing.Size(75, 34);
             this.btQry.TabIndex = 5;
@@ -245,15 +217,6 @@ namespace Print
             this.label5.Size = new System.Drawing.Size(17, 12);
             this.label5.TabIndex = 19;
             this.label5.Text = "至";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(901, 15);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(53, 12);
-            this.label6.TabIndex = 15;
-            this.label6.Text = "排序字段";
             // 
             // label4
             // 
@@ -407,23 +370,6 @@ namespace Print
             this.grid1.TabStop = true;
             this.grid1.ToolTipText = "";
             // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(900, 45);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(53, 12);
-            this.label13.TabIndex = 15;
-            this.label13.Text = "合计字段";
-            // 
-            // cbSum
-            // 
-            this.cbSum.FormattingEnabled = true;
-            this.cbSum.Location = new System.Drawing.Point(959, 40);
-            this.cbSum.Name = "cbSum";
-            this.cbSum.Size = new System.Drawing.Size(88, 20);
-            this.cbSum.TabIndex = 22;
-            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1604, 499);
@@ -488,11 +434,6 @@ namespace Print
         private ComboBox cbOper;
         private ComboBox cbVenType;
         private TextBox tbVen;
-        private ComboBox cbSortField;
-        private Label label6;
-        private CheckBox cbDir;
-        private ComboBox cbSum;
-        private Label label13;
 
     }
 }
