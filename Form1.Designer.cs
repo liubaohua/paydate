@@ -38,6 +38,7 @@ namespace Print
             this.cbOper = new System.Windows.Forms.ComboBox();
             this.cbVenType = new System.Windows.Forms.ComboBox();
             this.cbPayTerm1 = new System.Windows.Forms.ComboBox();
+            this.cbSave = new System.Windows.Forms.Button();
             this.btnPrint = new System.Windows.Forms.Button();
             this.btQry = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
@@ -75,6 +76,7 @@ namespace Print
             this.panel1.Controls.Add(this.cbOper);
             this.panel1.Controls.Add(this.cbVenType);
             this.panel1.Controls.Add(this.cbPayTerm1);
+            this.panel1.Controls.Add(this.cbSave);
             this.panel1.Controls.Add(this.btnPrint);
             this.panel1.Controls.Add(this.btQry);
             this.panel1.Controls.Add(this.label8);
@@ -150,6 +152,17 @@ namespace Print
             this.cbPayTerm1.Name = "cbPayTerm1";
             this.cbPayTerm1.Size = new System.Drawing.Size(103, 20);
             this.cbPayTerm1.TabIndex = 22;
+            // 
+            // cbSave
+            // 
+            this.cbSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbSave.Location = new System.Drawing.Point(1143, 18);
+            this.cbSave.Name = "cbSave";
+            this.cbSave.Size = new System.Drawing.Size(75, 34);
+            this.cbSave.TabIndex = 5;
+            this.cbSave.Text = "保存";
+            this.cbSave.UseVisualStyleBackColor = true;
+            this.cbSave.Click += new System.EventHandler(this.btSave_Click);
             // 
             // btnPrint
             // 
@@ -434,6 +447,7 @@ namespace Print
         private ComboBox cbOper;
         private ComboBox cbVenType;
         private TextBox tbVen;
+        private Button cbSave;
 
     }
 }

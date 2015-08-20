@@ -332,6 +332,8 @@ namespace Print
                 list.Add(item);
                 item = new ComboxItem("cexch_name", "币种");
                 list.Add(item);
+                item = new ComboxItem("nflat", "汇率");
+                list.Add(item);
                 item = new ComboxItem("cInvCode", "存货编码");
                 list.Add(item);
                 item = new ComboxItem("cInvName", "存货名称");
@@ -378,6 +380,8 @@ namespace Print
                 list.Add(item);
                 item = new ComboxItem("ivouchrowno", "订单行号");
                 list.Add(item);
+                item = new ComboxItem("cbMemo", "备注");
+                list.Add(item);
                 item = new ComboxItem("dPBVDate", "开票日期");
                 list.Add(item);
                 item = new ComboxItem("PayTerm", "付款条件");
@@ -386,11 +390,21 @@ namespace Print
                 list.Add(item);
                 item = new ComboxItem("cmaker", "制单人");
                 list.Add(item);
+                item = new ComboxItem("pbid", "pbid");
+                list.Add(item);
                 columnitems = list.ToArray();
             }
             return columnitems;
         }
 
+        private int GetIndexByName(string name)
+        {
+            ComboxItem[] ary = getItems();
+            for(int i=0;i<ary.Length;i++)
+                if(ary[i].Value.ToString().ToLower().Equals(name.ToLower()))
+                    return i;
+            throw new Exception("列名错误");
+        }
 
 
         private void DoFull1(DataTable dt)
@@ -408,101 +422,136 @@ namespace Print
             {
                 grid1.Redim(1, items.Length);
             }
-
             grid1.FixedRows = 1;
-            //grid2.FixedRows = 1;
-
+            grid1.FixedColumns = 1;
+            grid1.Selection.EnableMultiSelection = true;
 
             for (int i = 0; i < items.Length; i++)
                 grid1[0, i] = new MyHeader(items[i].Text);
-            // for (int i = 0; i < titles.Length; i++)
-            //grid2[0, i] = new MyHeader(titles[i]);
-
-            //grid1[0, 0].ColumnSpan = 3;
-            // grid1[0, 0].AddController(new SourceGrid.Cells.Controllers.SortableHeader());
-
-            //grid1[1, 0] = new SourceGrid.Cells.Cell("span2", typeof(string));
-            //grid1[1, 0].RowSpan = 2;
-            //grid1[1, 1] = new SourceGrid.Cells.Cell("ddddd", typeof(string));
-            //grid1[2, 1] = new SourceGrid.Cells.Cell("dfaddd", typeof(string));
-
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 int cnt = int.Parse(dt.Rows[i]["cnt"].ToString());
-
-                grid1[i + 1, 0] = new SourceGrid.Cells.Cell(dt.Rows[i]["序号"].ToString(), typeof(int));
-                // grid1[i+1, ++col] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPOID"].ToString(), typeof(string));
-                if (i == 0 || (i > 0 && !dt.Rows[i]["cPOID"].ToString().Equals(dt.Rows[i - 1]["cPOID"].ToString())))
-                {
-                    grid1[i + 1, 1] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPOID"].ToString(), typeof(string));
-
-                    grid1[i + 1, 2] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaketime"].ToString(), typeof(string));
-                    grid1[i + 1, 3] = new SourceGrid.Cells.Cell(dt.Rows[i]["cVenName"].ToString(), typeof(string));
-                    grid1[i + 1, 4] = new SourceGrid.Cells.Cell(dt.Rows[i]["cexch_name"].ToString(), typeof(string));
-
-                    grid1[i + 1, 15] = new SourceGrid.Cells.Cell(dt.Rows[i]["iMoney_Total"].ToString(), typeof(decimal));
-                    grid1[i + 1, 16] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum_Total"].ToString(), typeof(decimal));
-                    grid1[i + 1, 17] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatMoney_Total"].ToString(), typeof(decimal));
-                    grid1[i + 1, 18] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatSum_Total"].ToString(), typeof(decimal));
-
-                    grid1[i + 1, 23] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTaxPrice_Total"].ToString(), typeof(decimal));
-                    grid1[i + 1, 24] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatInvMoney_Total"].ToString(), typeof(decimal));
-                    grid1[i + 1, 25] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal_Total"].ToString(), typeof(decimal));
-                    grid1[i + 1, 26] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal_Total"].ToString(), typeof(decimal));
-                    grid1[i + 1, 26].View.TextAlignment = DevAge.Drawing.ContentAlignment.MiddleRight;
-                    
-                    if (cnt > 1)
-                    {
-                        grid1[i + 1, 1].RowSpan = cnt;
-                        grid1[i + 1, 2].RowSpan = cnt;
-                        grid1[i + 1, 3].RowSpan = cnt;
-                        grid1[i + 1, 4].RowSpan = cnt;
+                int cnt_sub = int.Parse(dt.Rows[i]["cnt_sub"].ToString());
 
 
-                        grid1[i + 1, 15].RowSpan = cnt;
-                        grid1[i + 1, 16].RowSpan = cnt;
-                        grid1[i + 1, 17].RowSpan = cnt;
-                        grid1[i + 1, 18].RowSpan = cnt;
-
-                        grid1[i + 1, 23].RowSpan = cnt;
-                        grid1[i + 1, 24].RowSpan = cnt;
-                        grid1[i + 1, 25].RowSpan = cnt;
-                        grid1[i + 1, 26].RowSpan = cnt;
-
-                    }
-                }
+                grid1[i + 1, GetIndexByName("序号")] = new SourceGrid.Cells.Cell(dt.Rows[i]["序号"].ToString(), typeof(int));
+                
                 //grid1[i + 1, 2] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaketime"].ToString(), typeof(string));
                 //grid1[i+1, 3] = new SourceGrid.Cells.Cell(dt.Rows[i]["cVenName"].ToString(), typeof(string));
                 //grid1[i+1, 4] = new SourceGrid.Cells.Cell(dt.Rows[i]["cexch_name"].ToString(), typeof(string));
-                grid1[i + 1, 5] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvCode"].ToString(), typeof(string));
-                grid1[i + 1, 6] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvName"].ToString(), typeof(string));
-                grid1[i + 1, 7] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvStd"].ToString(), typeof(string));
-                grid1[i + 1, 8] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvAddCode"].ToString(), typeof(string));
-                grid1[i + 1, 9] = new SourceGrid.Cells.Cell(dt.Rows[i]["cComUnitName"].ToString(), typeof(string));
-                grid1[i + 1, 10] = new SourceGrid.Cells.Cell(dt.Rows[i]["iQuantity"].ToString(), typeof(decimal));
-                grid1[i + 1, 11] = new SourceGrid.Cells.Cell(dt.Rows[i]["iMoney"].ToString(), typeof(decimal));
-                grid1[i + 1, 12] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum"].ToString(), typeof(decimal));
-                grid1[i + 1, 13] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatMoney"].ToString(), typeof(decimal));
-                grid1[i + 1, 14] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatSum"].ToString(), typeof(decimal));
-                //grid1[i+1, 15] = new SourceGrid.Cells.Cell(dt.Rows[i]["iMoney_Total"].ToString(), typeof(decimal));
-                //grid1[i+1, 16] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum_Total"].ToString(), typeof(decimal));
-                //grid1[i+1, 17] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatMoney_Total"].ToString(), typeof(decimal));
-                //grid1[i+1, 18] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatSum_Total"].ToString(), typeof(decimal));
-                grid1[i + 1, 19] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTaxPrice"].ToString(), typeof(decimal));
-                grid1[i + 1, 20] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatInvMoney"].ToString(), typeof(decimal));
-                grid1[i + 1, 21] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal"].ToString(), typeof(decimal));
-                grid1[i + 1, 22] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal"].ToString(), typeof(decimal));
-                //grid1[i+1, 23] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTaxPrice_Total"].ToString(), typeof(decimal));
-                //grid1[i+1, 24] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatInvMoney_Total"].ToString(), typeof(decimal));
-                //grid1[i+1, 25] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal_Total"].ToString(), typeof(decimal));
-                //grid1[i+1, 26] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal_Total"].ToString(), typeof(decimal));
-                grid1[i + 1, 27] = new SourceGrid.Cells.Cell(dt.Rows[i]["ivouchrowno"].ToString(), typeof(string));
-                grid1[i + 1, 28] = new SourceGrid.Cells.Cell(dt.Rows[i]["dPBVDate"].ToString(), typeof(string));
-                grid1[i + 1, 29] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayTerm"].ToString(), typeof(string));
-                grid1[i + 1, 30] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayDate"].ToString(), typeof(string));
-                grid1[i + 1, 31] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaker"].ToString(), typeof(string));
+                //grid1[i + 1, GetIndexByName("cInvCode")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvCode"].ToString(), typeof(string));
+                //grid1[i + 1, GetIndexByName("cInvName")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvName"].ToString(), typeof(string));
+                //grid1[i + 1, GetIndexByName("cInvStd")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvStd"].ToString(), typeof(string));
+                //grid1[i + 1, GetIndexByName("cInvAddCode")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvAddCode"].ToString(), typeof(string));
+                //grid1[i + 1, GetIndexByName("cComUnitName")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cComUnitName"].ToString(), typeof(string));
+                //grid1[i + 1, GetIndexByName("iQuantity")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iQuantity"].ToString(), typeof(decimal));
+                //grid1[i + 1, GetIndexByName("iMoney")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iMoney"].ToString(), typeof(decimal));
+                //grid1[i + 1, GetIndexByName("iSum")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum"].ToString(), typeof(decimal));
+                //grid1[i + 1, GetIndexByName("iNatMoney")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatMoney"].ToString(), typeof(decimal));
+                //grid1[i + 1, GetIndexByName("iNatSum")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatSum"].ToString(), typeof(decimal));
+
+                
+                //grid1[i + 1, GetIndexByName("iTaxPrice")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTaxPrice"].ToString(), typeof(decimal));
+                //grid1[i + 1, GetIndexByName("iNatInvMoney")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatInvMoney"].ToString(), typeof(decimal));
+                //grid1[i + 1, GetIndexByName("iOriTotal")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal"].ToString(), typeof(decimal));
+                //grid1[i + 1, GetIndexByName("iTotal")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal"].ToString(), typeof(decimal));
+
+
+                
+                grid1[i + 1, GetIndexByName("dPBVDate")] = new SourceGrid.Cells.Cell(dt.Rows[i]["dPBVDate"].ToString(), typeof(string));
+                //grid1[i + 1, GetIndexByName("PayTerm")] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayTerm"].ToString(), typeof(string));
+                grid1[i + 1, GetIndexByName("PayDate")] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayDate"].ToString(), typeof(string));
+                //grid1[i + 1, GetIndexByName("cmaker")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaker"].ToString(), typeof(string));
+                grid1[i + 1, GetIndexByName("pbid")] = new SourceGrid.Cells.Cell(dt.Rows[i]["pbid"].ToString(), typeof(int));
+
+                // grid1[i+1, ++col] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPOID"].ToString(), typeof(string));
+                if (i == 0 || (i > 0 && !dt.Rows[i]["cPOID"].ToString().Equals(dt.Rows[i - 1]["cPOID"].ToString())))
+                {
+                    grid1[i + 1, GetIndexByName("cPOID")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPOID"].ToString(), typeof(string));
+
+                    grid1[i + 1, GetIndexByName("cmaketime")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaketime"].ToString(), typeof(string));
+                    grid1[i + 1, GetIndexByName("cVenName")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cVenName"].ToString(), typeof(string));
+                    grid1[i + 1, GetIndexByName("cexch_name")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cexch_name"].ToString(), typeof(string));
+                    grid1[i + 1, GetIndexByName("nflat")] = new SourceGrid.Cells.Cell(dt.Rows[i]["nflat"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iMoney_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iMoney_Total"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iSum_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum_Total"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iNatMoney_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatMoney_Total"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iNatSum_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatSum_Total"].ToString(), typeof(decimal));
+
+                    grid1[i + 1, GetIndexByName("iTaxPrice_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTaxPrice_Total"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iNatInvMoney_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatInvMoney_Total"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iOriTotal_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal_Total"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iTotal_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal_Total"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iTotal_Total")].View.TextAlignment = DevAge.Drawing.ContentAlignment.MiddleRight;
+                    grid1[i + 1, GetIndexByName("PayTerm")] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayTerm"].ToString(), typeof(string));
+                    grid1[i + 1, GetIndexByName("cmaker")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaker"].ToString(), typeof(string));
+                    if (cnt > 1)
+                    {
+                        grid1[i + 1, GetIndexByName("cPOID")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("cmaketime")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("cVenName")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("cexch_name")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("nflat")].RowSpan = cnt;
+
+
+                        grid1[i + 1, GetIndexByName("iMoney_Total")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("iSum_Total")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("iNatMoney_Total")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("iNatSum_Total")].RowSpan = cnt;
+
+                        grid1[i + 1, GetIndexByName("iTaxPrice_Total")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("iNatInvMoney_Total")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("iOriTotal_Total")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("iTotal_Total")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("PayTerm")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("cmaker")].RowSpan = cnt;
+
+                    }
+                }
+
+                if (i == 0 || (i > 0 && ((!dt.Rows[i]["cPOID"].ToString().Equals(dt.Rows[i - 1]["cPOID"].ToString()))||(dt.Rows[i]["cPOID"].ToString().Equals(dt.Rows[i - 1]["cPOID"].ToString()) && !dt.Rows[i]["ivouchrowno"].ToString().Equals(dt.Rows[i - 1]["ivouchrowno"].ToString())))))
+                {
+                    grid1[i + 1, GetIndexByName("cInvCode")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvCode"].ToString(), typeof(string));
+                    grid1[i + 1, GetIndexByName("cInvName")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvName"].ToString(), typeof(string));
+                    grid1[i + 1, GetIndexByName("cInvStd")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvStd"].ToString(), typeof(string));
+                    grid1[i + 1, GetIndexByName("cInvAddCode")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvAddCode"].ToString(), typeof(string));
+                    grid1[i + 1, GetIndexByName("cComUnitName")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cComUnitName"].ToString(), typeof(string));
+                    grid1[i + 1, GetIndexByName("iQuantity")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iQuantity"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iMoney")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iMoney"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iSum")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iNatMoney")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatMoney"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iNatSum")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatSum"].ToString(), typeof(decimal));
+
+                    grid1[i + 1, GetIndexByName("iTaxPrice")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTaxPrice"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iNatInvMoney")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatInvMoney"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iOriTotal")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iTotal")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("cbMemo")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cbMemo"].ToString(), typeof(string));
+                    grid1[i + 1, GetIndexByName("ivouchrowno")] = new SourceGrid.Cells.Cell(dt.Rows[i]["ivouchrowno"].ToString(), typeof(string));
+                
+                    if (cnt_sub > 1)
+                    {
+                        grid1[i + 1, GetIndexByName("cInvCode")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("cInvName")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("cInvStd")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("cInvAddCode")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("cComUnitName")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("iQuantity")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("iMoney")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("iSum")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("iNatMoney")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("iNatSum")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("iTaxPrice")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("iNatInvMoney")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("iOriTotal")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("iTotal")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("cbMemo")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("ivouchrowno")].RowSpan = cnt_sub;
+                    }
+                }
 
             }
+            grid1.Columns[GetIndexByName("pbid")].Visible = false;
             //grid1.AutoStretchColumnsToFitWidth = true; 
             //grid1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;// doesnot work
             grid1.Columns.AutoSize(true);
@@ -582,7 +631,7 @@ namespace Print
 
 
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine("select row_number() over (" + orderbystr.ToString() + ") as 序号,count(1) over (partition by cPOID) as cnt,count(1) over (partition by cvencode) as cnt_ven,");
+                sb.AppendLine("select row_number() over (" + orderbystr.ToString() + ") as 序号,count(1) over (partition by cPOID) as cnt,count(1) over (partition by cPOID,ivouchrowno) as cnt_sub,");
 
                 //sb.AppendLine("cast(sum(iMoney) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iMoney_Total,");
                 //sb.AppendLine("cast(sum(iSum) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iSum_Total,");
@@ -595,7 +644,7 @@ namespace Print
                 //sb.AppendLine("cast(sum(iTotal) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iTotal_Total,");
 
                 sb.AppendLine("t.* from Myview t ");
-                sb.AppendLine("where (isnull(iTotal,0)<isnull(iNatInvMoney,0) or PayTerm='预付款') ");
+                sb.AppendLine("where isnull(iTotal,0)<isnull(iNatInvMoney,0) ");
               //  sb.AppendLine("where 1=1 ");
                 sb.AppendLine(condition.ToString());
                 sb.AppendLine(" " + orderbystr.ToString());
@@ -692,79 +741,6 @@ namespace Print
 
         private void dvResult_Paint(object sender, PaintEventArgs e)
         {
-            //if (dvResult.Rows.Count > 1)
-            //{
-            //    dvResult.Columns["cPOID"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["序号"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cnt"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cmaketime"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cVenName"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cexch_name"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cInvCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cInvName"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cInvStd"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cInvAddCode"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cComUnitName"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["iQuantity"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["iTaxPrice"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["iNatInvMoney"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["iOriTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["iTotal"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["dPBVDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["PayTerm"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["PayDate"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            //    dvResult.Columns["cmaker"].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-
-
-            //    dvResult.Columns["cPOID"].HeaderText = "订单号";
-            //    dvResult.Columns["cmaketime"].HeaderText = "制单时间";
-            //    dvResult.Columns["cVenName"].HeaderText = "供应商";
-            //    dvResult.Columns["cexch_name"].HeaderText = "币种";
-            //    dvResult.Columns["cInvCode"].HeaderText = "存货编码";
-            //    dvResult.Columns["cInvName"].HeaderText = "存货名称";
-            //    dvResult.Columns["cInvStd"].HeaderText = "规格";
-            //    dvResult.Columns["cInvAddCode"].HeaderText = "存货代码";
-            //    dvResult.Columns["cComUnitName"].HeaderText = "单位";
-            //    dvResult.Columns["iQuantity"].HeaderText = "数量";
-            //    dvResult.Columns["iTaxPrice"].HeaderText = "累计原币发票金额";
-            //    dvResult.Columns["iNatInvMoney"].HeaderText = "累计本币发票金额";
-            //    dvResult.Columns["iOriTotal"].HeaderText = "累计原币付款";
-            //    dvResult.Columns["iTotal"].HeaderText = "累计本币付款";
-            //    dvResult.Columns["dPBVDate"].HeaderText = "开票日期";
-            //    dvResult.Columns["PayTerm"].HeaderText = "付款条件";
-            //    dvResult.Columns["PayDate"].HeaderText = "付款日期";
-            //    dvResult.Columns["cmaker"].HeaderText = "订单制单人";
-
-            //    for (int i = 0; i < dvResult.Rows.Count; )
-            //    {
-            //        int rows = int.Parse(dvResult.Rows[i].Cells["cnt"].Value.ToString());
-            //        if (rows > 1)
-            //        {
-            //            MergeCells(i, i + rows - 1, 2, false, dvResult);
-            //            MergeCells(i, i + rows - 1, 3, false, dvResult);
-            //            MergeCells(i, i + rows - 1, 4, false, dvResult);
-            //            MergeCells(i, i + rows - 1, 5, false, dvResult);
-
-            //            MergeCells(i, i + rows - 1, 16, false, dvResult);
-            //            MergeCells(i, i + rows - 1, 17, false, dvResult);
-            //            MergeCells(i, i + rows - 1, 18, false, dvResult);
-            //            MergeCells(i, i + rows - 1, 19, false, dvResult);
-
-            //            MergeCells(i, i + rows - 1, 24, false, dvResult);
-            //            MergeCells(i, i + rows - 1, 25, false, dvResult);
-            //            MergeCells(i, i + rows - 1, 26, false, dvResult);
-            //            MergeCells(i, i + rows - 1, 27, false, dvResult);
-
-
-            //        }
-            //        i = i + rows;
-            //    }
-            //    if (dvResult.Columns["cvencode"].Visible)
-            //        dvResult.Columns["cvencode"].Visible = false;
-            //    if (dvResult.Columns["cnt"].Visible)
-            //        dvResult.Columns["cnt"].Visible = false;
-            //}
 
         }
 
@@ -793,33 +769,49 @@ namespace Print
         {
             try
             {
-                string l_Path = System.IO.Path.Combine("c:\\", "output.csv");
-
-                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(l_Path, false, System.Text.Encoding.Default))
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Excel(*.csv)|*.csv";
+                if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    SourceGrid.Exporter.CSV csv = new SourceGrid.Exporter.CSV();
-                    csv.Export(grid1, writer);
-                    writer.Close();
+                    using (System.IO.StreamWriter writer = new System.IO.StreamWriter(sfd.FileName, false, System.Text.Encoding.Default))
+                    {
+                        SourceGrid.Exporter.CSV csv = new SourceGrid.Exporter.CSV();
+                        csv.Export(grid1, writer);
+                        writer.Close();
+                    }
+                    DevAge.Shell.Utilities.OpenFile(sfd.FileName);
                 }
-
-                DevAge.Shell.Utilities.OpenFile(l_Path);
             }
             catch (Exception err)
             {
-                DevAge.Windows.Forms.ErrorDialog.Show(this, err, "CSV Export Error");
+                DevAge.Windows.Forms.ErrorDialog.Show(this, err, "CSV文件导出错误");
             }
 
-          
-            //PrintPreviewDialog dlg = new PrintPreviewDialog();
-            //SourceGrid.Exporter.GridPrintDocument pd = new SourceGrid.Exporter.GridPrintDocument(this.grid1);
+        }
 
-            //pd.RangeToPrint = new SourceGrid.Range(0, 0, this.grid1.Rows.Count - 1, this.grid1.Columns.Count - 1);
-            ////pd.PageHeaderText = "Print sample\t\tSourceGrid print document sample";
-            ////pd.PageTitleText = "\tSample grid";
-            ////pd.PageFooterText = "\tPage [PageNo] from [PageCount]";
-            //dlg.Document = pd;
-
-            //dlg.ShowDialog(this);
+        private void btSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int[] rows = grid1.Selection.GetSelectionRegion().GetRowsIndex();
+                if (rows==null || rows.Length == 0)
+                    return;
+                this.sqlConnection1.Open();
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    SqlCommand cmdSelect = new SqlCommand("update Po_podetails set cbMemo='" + grid1[rows[i], GetIndexByName("cbMemo")].Value + "' where id='" + grid1[rows[i], GetIndexByName("pbid")].Value + "'", this.sqlConnection1);
+                    int iresult = cmdSelect.ExecuteNonQuery();
+                }
+                MessageBox.Show("成功保存"+rows.Length+"条记录");
+            }
+            catch (Exception e1)
+            {
+                throw e1;
+            }
+            finally
+            {
+                this.sqlConnection1.Close();
+            }
         }
     }
 }

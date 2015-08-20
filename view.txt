@@ -22,7 +22,7 @@ cast(sum(iNatInvMoney) over (partition by ph.cPOID)  as decimal(18,2)) as iNatIn
 --cast(sum(iOriTotal) over (partition by cPOID)  as decimal(18,2)) as iOriTotal_Total,
 --cast(sum(iTotal) over (partition by cPOID)  as decimal(18,2)) as iTotal_Total,
    
-  ph.cMaker, pb.id as pbid, ph.POID as phid,ph.cAuditDate,pb.ivouchrowno 
+  ph.cMaker, pb.id as pbid, ph.POID as phid,ph.cAuditDate,pb.ivouchrowno,ph.nflat,pb.cbMemo 
 FROM         dbo.PO_Pomain AS ph INNER JOIN
   dbo.PO_Podetails AS pb ON ph.POID = pb.POID INNER JOIN
   dbo.Inventory AS i ON pb.cInvCode = i.cInvCode INNER JOIN
