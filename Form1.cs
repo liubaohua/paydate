@@ -397,6 +397,8 @@ namespace Print
                 item = new ComboxItem("cmaker", "制单人");
                 list.Add(item);
                 item = new ComboxItem("pbid", "pbid");
+                list.Add(item); 
+                item = new ComboxItem("id", "id");
                 list.Add(item);
                 columnitems = list.ToArray();
             }
@@ -444,12 +446,14 @@ namespace Print
                 grid1[i + 1, GetIndexByName("iSum")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum"].ToString(), typeof(decimal));
                 grid1[i + 1, GetIndexByName("iOriTotal")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal"].ToString(), typeof(decimal));
                 grid1[i + 1, GetIndexByName("iTotal")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal"].ToString(), typeof(decimal));
+                grid1[i + 1, GetIndexByName("cbMemo")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cbMemo"].ToString(), typeof(string));
 
+
+
+                grid1[i + 1, GetIndexByName("pbid")] = new SourceGrid.Cells.Cell(dt.Rows[i]["pbid"].ToString(), typeof(int));
+                grid1[i + 1, GetIndexByName("id")] = new SourceGrid.Cells.Cell(dt.Rows[i]["id"].ToString(), typeof(int));
 
                 
-                grid1[i + 1, GetIndexByName("pbid")] = new SourceGrid.Cells.Cell(dt.Rows[i]["pbid"].ToString(), typeof(int));
-
-                grid1[i + 1, GetIndexByName("cPOID")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPOID"].ToString(), typeof(string));
 
                 
 
@@ -459,7 +463,8 @@ namespace Print
                     grid1[i + 1, GetIndexByName("cPBVCode")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPBVCode"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("dPBVDate")] = new SourceGrid.Cells.Cell(dt.Rows[i]["dPBVDate"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("PayDate")] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayDate"].ToString(), typeof(string));
-                
+                    
+                    grid1[i + 1, GetIndexByName("cPOID")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPOID"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("cmaketime")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaketime"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("cVenName")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cVenName"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("cexch_name")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cexch_name"].ToString(), typeof(string));
@@ -472,12 +477,19 @@ namespace Print
                     grid1[i + 1, GetIndexByName("iTotal_Total")].View.TextAlignment = DevAge.Drawing.ContentAlignment.MiddleRight;
                     grid1[i + 1, GetIndexByName("PayTerm")] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayTerm"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("cmaker")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaker"].ToString(), typeof(string));
+
+                    grid1[i + 1, GetIndexByName("iOriPayBalance")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriPayBalance"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iPayBalance")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iPayBalance"].ToString(), typeof(decimal));
+                    
+                    
+
                     if (cnt > 1)
                     {
                         grid1[i + 1, GetIndexByName("cPBVCode")].RowSpan = cnt;
                         grid1[i + 1, GetIndexByName("dPBVDate")].RowSpan = cnt;
                         grid1[i + 1, GetIndexByName("PayDate")].RowSpan = cnt;
 
+                        grid1[i + 1, GetIndexByName("cPOID")].RowSpan = cnt;
                         grid1[i + 1, GetIndexByName("cmaketime")].RowSpan = cnt;
                         grid1[i + 1, GetIndexByName("cVenName")].RowSpan = cnt;
                         grid1[i + 1, GetIndexByName("cexch_name")].RowSpan = cnt;
@@ -489,6 +501,9 @@ namespace Print
                         grid1[i + 1, GetIndexByName("iTotal_Total")].RowSpan = cnt;
                         grid1[i + 1, GetIndexByName("PayTerm")].RowSpan = cnt;
                         grid1[i + 1, GetIndexByName("cmaker")].RowSpan = cnt;
+
+                        grid1[i + 1, GetIndexByName("iOriPayBalance")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("iPayBalance")].RowSpan = cnt;
 
                     }
                 }
@@ -502,12 +517,12 @@ namespace Print
                     grid1[i + 1, GetIndexByName("cComUnitName")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cComUnitName"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("iQuantity")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iQuantity"].ToString(), typeof(decimal));
 
-                    grid1[i + 1, GetIndexByName("iOriPayBalance")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriPayBalance"].ToString(), typeof(decimal));
-                    grid1[i + 1, GetIndexByName("iPayBalance")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iPayBalance"].ToString(), typeof(decimal));
+                    //grid1[i + 1, GetIndexByName("iOriPayBalance")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriPayBalance"].ToString(), typeof(decimal));
+                    //grid1[i + 1, GetIndexByName("iPayBalance")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iPayBalance"].ToString(), typeof(decimal));
 
                     
 
-                    grid1[i + 1, GetIndexByName("cbMemo")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cbMemo"].ToString(), typeof(string));
+                    //grid1[i + 1, GetIndexByName("cbMemo")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cbMemo"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("ivouchrowno")] = new SourceGrid.Cells.Cell(dt.Rows[i]["ivouchrowno"].ToString(), typeof(string));
                 
                     if (cnt_sub > 1)
@@ -519,11 +534,10 @@ namespace Print
                         grid1[i + 1, GetIndexByName("cComUnitName")].RowSpan = cnt_sub;
                         grid1[i + 1, GetIndexByName("iQuantity")].RowSpan = cnt_sub;
 
-                        grid1[i + 1, GetIndexByName("iOriPayBalance")].RowSpan = cnt_sub;
-                        grid1[i + 1, GetIndexByName("iPayBalance")].RowSpan = cnt_sub;
-
+                        //grid1[i + 1, GetIndexByName("iOriPayBalance")].RowSpan = cnt_sub;
+                        //grid1[i + 1, GetIndexByName("iPayBalance")].RowSpan = cnt_sub;
                         
-                        grid1[i + 1, GetIndexByName("cbMemo")].RowSpan = cnt_sub;
+                        //grid1[i + 1, GetIndexByName("cbMemo")].RowSpan = cnt_sub;
                         grid1[i + 1, GetIndexByName("ivouchrowno")].RowSpan = cnt_sub;
                     }
                 }
@@ -545,7 +559,8 @@ namespace Print
                 grid1[grid1.Rows.Count - 1, GetIndexByName("iPayBalance")] = new SourceGrid.Cells.Cell(dt.Rows[0]["iPayBalance_all"].ToString(), typeof(decimal));
             }
             grid1.Columns[GetIndexByName("pbid")].Visible = false;//采购订单子表ID不可见
-           // grid1.Columns[GetIndexByName("ivouchrowno")].Visible = false;//采购订单行号
+            grid1.Columns[GetIndexByName("id")].Visible = false;
+            grid1.Columns[GetIndexByName("ivouchrowno")].Visible = false;//采购订单行号
 
             //grid1.AutoStretchColumnsToFitWidth = true; 
             //grid1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;// doesnot work
@@ -593,9 +608,12 @@ namespace Print
             }
             try
             {
+                StringBuilder ordercond= new StringBuilder();
+                StringBuilder invoicecond = new StringBuilder();
                 StringBuilder condition = new StringBuilder();
-                StringBuilder orderbystr = new StringBuilder("order by CPOID,ivouchrowno");
-                StringBuilder groupbystr = new StringBuilder("partition by cPOID");//cvencode
+
+                //StringBuilder orderbystr = new StringBuilder("order by cPBVCode,ivouchrowno");
+                //StringBuilder groupbystr = new StringBuilder("partition by cPOID");//cvencode
 
                 if (dtp1.Text.Trim().Equals("") || dtp2.Text.Trim().Equals(""))
                 {
@@ -604,32 +622,80 @@ namespace Print
                 }
                 //if (cbSortField.SelectedIndex >= 0)
                 //    orderbystr = new StringBuilder("order by " + (cbSortField.SelectedItem as ComboxItem).Value);
-                if (cbVenType.SelectedIndex >= 0 && cbOper.SelectedIndex>= 0 && !tbVen.Text.Equals(""))
-                    condition.Append(" and " + getVenType(cbVenType.SelectedIndex) + getOperType(cbOper.SelectedIndex, tbVen.Text));
+                if (cbVenType.SelectedIndex >= 0 && cbOper.SelectedIndex >= 0 && !tbVen.Text.Equals(""))//订单表
+                    ordercond.Append(" and " + getVenType(cbVenType.SelectedIndex) + getOperType(cbOper.SelectedIndex, tbVen.Text));
+                if (!dpt3.Text.Trim().Equals("") && !dpt4.Text.Trim().Equals(""))//订单表
+                    ordercond.Append(" and cmaketime>='" + String.Format("{0:yyyy-MM-dd}", dpt3.Text) + "' and cmaketime<='" + String.Format("{0:yyyy-MM-dd}", dpt4.Text) + "' ");
+                if (!cbPayTerm1.Text.Equals("") && !cbPayTerm2.Text.Equals(""))//订单表
+                    ordercond.Append(" and PayTerm>='" + cbPayTerm1.Text + "' and PayTerm<='" + cbPayTerm2.Text + "' ");
+                if (!tbPoCode1.Text.Equals("") && !tbPocode2.Text.Equals(""))//订单表
+                    ordercond.Append(" and cPOID>='" + tbPoCode1.Text + "' and cPOID<='" + tbPocode2.Text + "' ");//订单表
+                
+                //开票日期
+                if (!dpt5.Text.Trim().Equals("") && !dpt6.Text.Trim().Equals(""))//发票表
+                    invoicecond.Append(" and dPBVDate>='" + String.Format("{0:yyyy-MM-dd}", dpt5.Text) + "' and dPBVDate<='" + String.Format("{0:yyyy-MM-dd}", dpt6.Text) + "' ");
+                if (!tbInvoiceNO.Text.Equals(""))
+                    invoicecond.Append(" and cPBVCode='" + tbInvoiceNO.Text + "'");//发票表
+
                 //付款日期
                 if (!dtp1.Text.Trim().Equals("") && !dtp2.Text.Trim().Equals(""))
-                    condition.Append(" and PayDate>='" + String.Format("{0:yyyy-MM-dd}", dtp1.Text) + "' and PayDate<='" + String.Format("{0:yyyy-MM-dd}", dtp2.Text) + "' ");
-                //订单日期
-                if (!dpt3.Text.Trim().Equals("") && !dpt4.Text.Trim().Equals(""))
-                    condition.Append(" and cmaketime>='" + String.Format("{0:yyyy-MM-dd}", dpt3.Text) + "' and cmaketime<='" + String.Format("{0:yyyy-MM-dd}", dpt4.Text) + "' ");
-                //开票日期
-                if (!dpt5.Text.Trim().Equals("") && !dpt6.Text.Trim().Equals(""))
-                    condition.Append(" and dPBVDate>='" + String.Format("{0:yyyy-MM-dd}", dpt5.Text) + "' and dPBVDate<='" + String.Format("{0:yyyy-MM-dd}", dpt6.Text) + "' ");
-
-
-                if (!cbPayTerm1.Text.Equals("") && !cbPayTerm2.Text.Equals(""))
-                    condition.Append(" and PayTerm>='" + cbPayTerm1.Text + "' and PayTerm<='" + cbPayTerm2.Text + "' ");
-                if (!tbPoCode1.Text.Equals("") && !tbPocode2.Text.Equals(""))
-                    condition.Append(" and cPOID>='" + tbPoCode1.Text + "' and cPOID<='" + tbPocode2.Text + "' ");
-                if (!tbInvoiceNO.Text.Equals(""))
-                    condition.Append(" and cPBVCode='"+tbInvoiceNO.Text+"'");
+                    invoicecond.Append(" and (case when v.cvendefine1='预付款' then CONVERT(nvarchar(30), ob.cAuditDate, 112)  when v.cvendefine1='见票付款' then CONVERT(nvarchar(30), pvh.dPBVDate, 112)  when v.cvendefine1='月结30天' then CONVERT(nvarchar(30), pvh.dPBVDate+30, 112)  when v.cvendefine1='月结60天' then CONVERT(nvarchar(30), pvh.dPBVDate+60, 112)  end )>='" + String.Format("{0:yyyy-MM-dd}", dtp1.Text) + "' and (case when v.cvendefine1='预付款' then CONVERT(nvarchar(30), ob.cAuditDate, 112)  when v.cvendefine1='见票付款' then CONVERT(nvarchar(30), pvh.dPBVDate, 112)  when v.cvendefine1='月结30天' then CONVERT(nvarchar(30), pvh.dPBVDate+30, 112)  when v.cvendefine1='月结60天' then CONVERT(nvarchar(30), pvh.dPBVDate+60, 112)  end )<='" + String.Format("{0:yyyy-MM-dd}", dtp2.Text) + "' ");
+                
 
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine("select row_number() over (" + orderbystr.ToString() + ") as 序号,count(1) over (partition by cPOID) as cnt,count(1) over (partition by cPOID,ivouchrowno) as cnt_sub,");
-                sb.AppendLine(" t.* from Myview t where isnull(iTotal,0)<isnull(iSum,0) ");
+                sb.AppendLine("select row_number() over (order by isnull(cPBVCode,'zzzzz'),ivouchrowno) as 序号,t.* from (");
+                        sb.AppendLine("select pt.*,lt.*");
+                        sb.AppendLine("from ( ");
+                        sb.AppendLine("SELECT ph.cPOID, CONVERT(nvarchar(30), ph.dPODate, 112) AS cmaketime,");
+                        sb.AppendLine("v.cVenCode, v.cVenName, ph.cexch_name, pb.cInvCode, i.cInvName, i.cInvStd, i.cInvAddCode,");
+                        sb.AppendLine("cu.cComUnitName, CAST(pb.iQuantity AS decimal(18, 2)) AS iQuantity,");
+                        sb.AppendLine("v.cVenDefine1 AS PayTerm,");
+                        sb.AppendLine(" ph.cMaker, pb.id as pbid, ph.POID as phid,");
+                        sb.AppendLine(" ph.cAuditDate,--pb.ivouchrowno,");
+                        sb.AppendLine(" ph.nflat ");//,pb.cbMemo
+                        sb.AppendLine("FROM dbo.PO_Pomain AS ph INNER JOIN ");
+                        sb.AppendLine(" dbo.PO_Podetails AS pb ON ph.POID = pb.POID INNER JOIN ");
+                        sb.AppendLine(" dbo.Inventory AS i ON pb.cInvCode = i.cInvCode INNER JOIN ");
+                        sb.AppendLine(" dbo.ComputationUnit AS cu ON cu.cComunitCode = i.cComUnitCode INNER JOIN ");
+                        sb.AppendLine(" dbo.Vendor AS v ON v.cVenCode = ph.cVenCode where 1=1 ").Append(ordercond);
+                        sb.AppendLine(") lt ");
+                        sb.AppendLine("LEFT JOIN ");
+                        sb.AppendLine("(SELECT pvb.id, pvh.cPBVCode, pvb.iPOsID,pvb.ivouchrowno,");
+                        sb.AppendLine("CONVERT(nvarchar(30), pvh.dPBVDate, 112) AS dPBVDate,");
+                        sb.AppendLine("pvb.iOriSum as iOriSum,--原币价税合计 ");
+                        sb.AppendLine("pvb.iSum as iSum,--本币价税合计 ");
+                        sb.AppendLine("pvb.iOriTotal,--原币付款 ");
+                        sb.AppendLine("pvb.iTotal,--本币付款 ");
+                        sb.AppendLine("SUM(pvb.iOriSum) over (PARTITION by pvh.cPBVCode) iOriSum_total,");
+                        sb.AppendLine("SUM(pvb.iSum) over (PARTITION by pvh.cPBVCode) iSum_total,");
+                        sb.AppendLine("SUM(pvb.iOriTotal) over (PARTITION by pvh.cPBVCode) iOriTotal_total,");
+                        sb.AppendLine("SUM(pvb.itotal) over (PARTITION by pvh.cPBVCode) itotal_total,");
+                        //sb.AppendLine("cast(pvb.iOriSum-pvb.iOriTotal as decimal(18,2)) as iOriPayBalance,");
+                        //sb.AppendLine("cast(pvb.iSum-pvb.iTotal as decimal(18,2)) as iPayBalance,");
+                        sb.AppendLine("SUM(cast(pvb.iOriSum-pvb.iOriTotal as decimal(18,2))) over (PARTITION by pvh.cPBVCode) iOriPayBalance,");
+                        sb.AppendLine("SUM(cast(pvb.iSum-pvb.iTotal as decimal(18,2))) over (PARTITION by pvh.cPBVCode) iPayBalance,");
+                        sb.AppendLine("SUM(cast(pvb.iOriSum-pvb.iOriTotal as decimal(18,2))) over () iOriPayBalance_all,");
+                        sb.AppendLine("SUM(cast(pvb.iSum-pvb.iTotal as decimal(18,2))) over () iPayBalance_all,");
+                        sb.AppendLine("SUM(pvb.iOriSum) over () iOriSum_all,");
+                        sb.AppendLine("SUM(pvb.iSum) over () iSum_all,");
+                        sb.AppendLine("SUM(pvb.iOriTotal) over () iOriTotal_all,");
+                        sb.AppendLine("SUM(pvb.iTotal) over () iTotal_all ,");
+                        sb.AppendLine("count(1) over (partition by cPBVCode) as cnt,");
+                        sb.AppendLine("count(1) over (partition by cPBVCode,ivouchrowno) as cnt_sub,");
+                        sb.AppendLine("(case when v.cvendefine1='预付款' then CONVERT(nvarchar(30), ob.cAuditDate, 112)"); 
+                        sb.AppendLine(" when v.cvendefine1='见票付款' then CONVERT(nvarchar(30), pvh.dPBVDate, 112) ");
+                        sb.AppendLine(" when v.cvendefine1='月结30天' then CONVERT(nvarchar(30), pvh.dPBVDate+30, 112) ");
+                        sb.AppendLine(" when v.cvendefine1='月结60天' then CONVERT(nvarchar(30), pvh.dPBVDate+60, 112) ");
+                        sb.AppendLine(" end ) as PayDate,pvb.cbMemo ");
+                        sb.AppendLine("FROM dbo.PurBillVouchs AS pvb INNER JOIN ");
+                        sb.AppendLine("dbo.PurBillVouch AS pvh ON pvh.PBVID = pvb.PBVID inner join vendor v on v.cvencode=pvh.cvencode left join (select pb.id,ph.cAuditDate from PO_Podetails pb inner join PO_Pomain ph on ph.POID = pb.POID) ob on ob.id=pvb.iPOsID ");
+                        sb.AppendLine("where iPOsID is not null ").Append(invoicecond);
+                        sb.AppendLine(") AS pt ");
+                        sb.AppendLine("ON pt.iPOsID = lt.pbid");
+                sb.AppendLine(") t where isnull(iTotal,0)<isnull(iSum,0) ");
               //  sb.AppendLine("where 1=1 ");
                 sb.AppendLine(condition.ToString());
-                sb.AppendLine(" " + orderbystr.ToString());
+                sb.AppendLine(" order by isnull(cPBVCode,'zzzzz'),ivouchrowno");
                 SqlCommand cmdSelect = new SqlCommand(sb.ToString(), this.sqlConnection1);
                 this.sqlConnection1.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmdSelect);
@@ -789,6 +855,9 @@ namespace Print
                 int rowspan = 1;
                 int realcolumn;
                 Excel.Range range = null;
+                int iColCPOID = GetIndexByName("cPOID");
+                int iColPBVCode = GetIndexByName("cPBVCode");
+                int iColInvCode = GetIndexByName("cinvcode");
                 for (int i = 0; i < grid1.Rows.Count; i++)
                 {
                     //for (int j = 5; j < 6; j++)
@@ -809,6 +878,8 @@ namespace Print
                             {
                                 range = worksheet.get_Range(worksheet.Cells[i + 1, realcolumn + 1], worksheet.Cells[i + 1 + rowspan - 1, realcolumn + 1]);
                                 range.MergeCells = true;
+                                if (column == iColCPOID || column == iColPBVCode || column == iColInvCode)
+                                    range.NumberFormatLocal = "@";
                                 worksheet.Cells[i + 1, realcolumn + 1] = grid1[i, column].Value;
                             }
                         }
@@ -817,12 +888,13 @@ namespace Print
                             //SourceGrid.Cells.Views.ColumnHeader view = new SourceGrid.Cells.Views.ColumnHeader();
                             //view.Font = new System.Drawing.Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
                             //view.TextAlignment = DevAge.Drawing.ContentAlignment.MiddleCenter;
-
+                            range = worksheet.get_Range(worksheet.Cells[i + 1, realcolumn + 1], worksheet.Cells[i + 1, realcolumn + 1]);
                             if (grid1[i, column].GetType().Name.Equals("MyHeader"))
                             {
-                                range = worksheet.get_Range(worksheet.Cells[i + 1, realcolumn + 1], worksheet.Cells[i + 1, realcolumn + 1]);
                                 range.Font.Bold = true;
                             }
+                            if (column == iColCPOID || column == iColPBVCode || column == iColInvCode)
+                                range.NumberFormatLocal = "@";
                             //worksheet.get_Range("A1", "C3").Font.Name = "Times New Roman";//设置字体.  
                             //worksheet.get_Range("A1", "C3").Font.Size = 22;//设置字体大小  
                             //range.Font.Bold = true;//加粗  
@@ -874,7 +946,10 @@ namespace Print
                 //Missing.Value, Missing.Value, Missing.Value, Missing.Value,
                 //Missing.Value, XlSaveAsAccessMode.xlNoChange, Missing.Value,
                 //Missing.Value, Missing.Value, Missing.Value, Missing.Value);
-                DevAge.Shell.Utilities.OpenFile(excelfile);
+                
+            }catch(Exception e2)
+            {
+                MessageBox.Show(e2.Message,"错误");
             }
             finally
             {
@@ -885,6 +960,7 @@ namespace Print
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
                 MessageBox.Show("导出成功", "提示");
+                DevAge.Shell.Utilities.OpenFile(excelfile);
             }
         }  
 
@@ -898,7 +974,7 @@ namespace Print
                 this.sqlConnection1.Open();
                 for (int i = 0; i < rows.Length; i++)
                 {
-                    SqlCommand cmdSelect = new SqlCommand("update Po_podetails set cbMemo='" + grid1[rows[i], GetIndexByName("cbMemo")].Value + "' where id='" + grid1[rows[i], GetIndexByName("pbid")].Value + "'", this.sqlConnection1);
+                    SqlCommand cmdSelect = new SqlCommand("update PurBillVouchs set cbMemo='" + grid1[rows[i], GetIndexByName("cbMemo")].Value + "' where id='" + grid1[rows[i], GetIndexByName("id")].Value + "'", this.sqlConnection1);
                     int iresult = cmdSelect.ExecuteNonQuery();
                 }
                 MessageBox.Show("成功保存"+rows.Length+"条记录");
