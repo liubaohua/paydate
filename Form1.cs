@@ -15,9 +15,9 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Threading;
-//using Microsoft.Office.Core;
 using Microsoft.Office;
-
+using Microsoft.Office.Interop.Excel;  
+using Excel=Microsoft.Office.Interop.Excel;
 using SourceGrid;
 using SourceGrid.Cells.Controllers;
 
@@ -64,7 +64,7 @@ namespace Print
 
 
 
-        public DataTable getSqlData(string sql)
+        public System.Data.DataTable getSqlData(string sql)
         {
             SqlCommand cmdSelect = new SqlCommand(sql, this.sqlConnection1);
             this.sqlConnection1.Open();
@@ -287,7 +287,7 @@ namespace Print
 
         private SourceGrid.Grid grid1;
 
-        private void initGrid(DataTable dt)
+        private void initGrid(System.Data.DataTable dt)
         {
             //grid1 = new Grid();
             //this.SuspendLayout();
@@ -324,9 +324,13 @@ namespace Print
                 List<ComboxItem> list = new List<ComboxItem>();
                 ComboxItem item = new ComboxItem("序号", "序号");
                 list.Add(item);
-                item = new ComboxItem("cPOID", "订单号");
+                item = new ComboxItem("cbMemo", "备注");
                 list.Add(item);
-                item = new ComboxItem("cmaketime", "日期");
+                item = new ComboxItem("cPBVCode", "发票号");
+                list.Add(item);
+                item = new ComboxItem("dPBVDate", "发票日期");
+                list.Add(item);
+                item = new ComboxItem("PayDate", "付款日期");
                 list.Add(item);
                 item = new ComboxItem("cVenName", "供应商");
                 list.Add(item);
@@ -346,47 +350,49 @@ namespace Print
                 list.Add(item);
                 item = new ComboxItem("iQuantity", "数量");
                 list.Add(item);
-                item = new ComboxItem("iMoney", "原币无税金额");
+                //item = new ComboxItem("iMoney", "原币无税金额");
+                //list.Add(item);
+                //item = new ComboxItem("iSum", "原币含税金额");
+                //list.Add(item);
+                //item = new ComboxItem("iNatMoney", "本币无税金额");
+                //list.Add(item);
+                //item = new ComboxItem("iNatSum", "本币含税金额");
+                //list.Add(item);
+                //item = new ComboxItem("iMoney_Total", "原币无税金额合计");
+                //list.Add(item);
+                //item = new ComboxItem("iSum_Total", "原币含税金额合计");
+                //list.Add(item);
+                //item = new ComboxItem("iNatMoney_Total", "本币无税金额合计");
+                //list.Add(item);
+                //item = new ComboxItem("iNatSum_Total", "本币含税金额合计");
+                //list.Add(item);
+                item = new ComboxItem("iOriSum", "原币发票金额");
                 list.Add(item);
-                item = new ComboxItem("iSum", "原币含税金额");
+                item = new ComboxItem("iSum", "本币发票金额");
                 list.Add(item);
-                item = new ComboxItem("iNatMoney", "本币无税金额");
+                item = new ComboxItem("iOriSum_Total", "原币发票金额合计");
                 list.Add(item);
-                item = new ComboxItem("iNatSum", "本币含税金额");
-                list.Add(item);
-                item = new ComboxItem("iMoney_Total", "原币无税金额合计");
-                list.Add(item);
-                item = new ComboxItem("iSum_Total", "原币含税金额合计");
-                list.Add(item);
-                item = new ComboxItem("iNatMoney_Total", "本币无税金额合计");
-                list.Add(item);
-                item = new ComboxItem("iNatSum_Total", "本币含税金额合计");
-                list.Add(item);
-                item = new ComboxItem("iTaxPrice", "原币发票金额");
-                list.Add(item);
-                item = new ComboxItem("iNatInvMoney", "本币发票金额");
+                item = new ComboxItem("iSum_Total", "本币发票金额合计");
                 list.Add(item);
                 item = new ComboxItem("iOriTotal", "原币付款");
                 list.Add(item);
                 item = new ComboxItem("iTotal", "本币付款");
                 list.Add(item);
-                item = new ComboxItem("iTaxPrice_Total", "原币发票金额合计");
-                list.Add(item);
-                item = new ComboxItem("iNatInvMoney_Total", "本币发票金额合计");
-                list.Add(item);
                 item = new ComboxItem("iOriTotal_Total", "原币付款合计");
                 list.Add(item);
                 item = new ComboxItem("iTotal_Total", "本币付款合计");
                 list.Add(item);
-                item = new ComboxItem("ivouchrowno", "订单行号");
+                item = new ComboxItem("iOriPayBalance", "原币余额");
                 list.Add(item);
-                item = new ComboxItem("cbMemo", "备注");
-                list.Add(item);
-                item = new ComboxItem("dPBVDate", "开票日期");
+                item = new ComboxItem("iPayBalance", "本币余额");
                 list.Add(item);
                 item = new ComboxItem("PayTerm", "付款条件");
                 list.Add(item);
-                item = new ComboxItem("PayDate", "付款日期");
+                item = new ComboxItem("ivouchrowno", "订单行号");
+                list.Add(item);
+                item = new ComboxItem("cPOID", "订单号");
+                list.Add(item);
+                item = new ComboxItem("cmaketime", "订单日期");
                 list.Add(item);
                 item = new ComboxItem("cmaker", "制单人");
                 list.Add(item);
@@ -407,16 +413,14 @@ namespace Print
         }
 
 
-        private void DoFull1(DataTable dt)
+        private void DoFull1(System.Data.DataTable dt)
         {
             ComboxItem[] items = getItems();
 
-            //string[] titles = new string[] { "序号", "订单号", "日期", "供应商", "币种", "存货编码", "存货名称", "规格型号", "存货代码", "单位", "数量", "原币无税金额", "原币含税金额", "本币无税金额", "本币含税金额", "原币无税金额合计", "原币含税金额合计", "本币无税金额合计", "本币含税金额合计", "原币发票金额", "本币发票金额", "原币付款", "本币付款", "原币发票金额合计", "本币发票金额合计", "原币付款合计", "本币付款合计", "开票日期", "付款条件", "付款日期", "制单人" };
-            //grid2.Redim(1, titles.Length);
             if (dt.Rows.Count > 0)
             {
-                grid1.Redim(1, dt.Columns.Count - 2);
-                grid1.Redim(dt.Rows.Count + 1, dt.Columns.Count - 2);
+                grid1.Redim(1, items.Length);
+                grid1.Redim(dt.Rows.Count + 1 + 1, items.Length);
             }
             else
             {
@@ -433,53 +437,36 @@ namespace Print
                 int cnt = int.Parse(dt.Rows[i]["cnt"].ToString());
                 int cnt_sub = int.Parse(dt.Rows[i]["cnt_sub"].ToString());
 
-
                 grid1[i + 1, GetIndexByName("序号")] = new SourceGrid.Cells.Cell(dt.Rows[i]["序号"].ToString(), typeof(int));
-                
-                //grid1[i + 1, 2] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaketime"].ToString(), typeof(string));
-                //grid1[i+1, 3] = new SourceGrid.Cells.Cell(dt.Rows[i]["cVenName"].ToString(), typeof(string));
-                //grid1[i+1, 4] = new SourceGrid.Cells.Cell(dt.Rows[i]["cexch_name"].ToString(), typeof(string));
-                //grid1[i + 1, GetIndexByName("cInvCode")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvCode"].ToString(), typeof(string));
-                //grid1[i + 1, GetIndexByName("cInvName")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvName"].ToString(), typeof(string));
-                //grid1[i + 1, GetIndexByName("cInvStd")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvStd"].ToString(), typeof(string));
-                //grid1[i + 1, GetIndexByName("cInvAddCode")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvAddCode"].ToString(), typeof(string));
-                //grid1[i + 1, GetIndexByName("cComUnitName")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cComUnitName"].ToString(), typeof(string));
-                //grid1[i + 1, GetIndexByName("iQuantity")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iQuantity"].ToString(), typeof(decimal));
-                //grid1[i + 1, GetIndexByName("iMoney")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iMoney"].ToString(), typeof(decimal));
-                //grid1[i + 1, GetIndexByName("iSum")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum"].ToString(), typeof(decimal));
-                //grid1[i + 1, GetIndexByName("iNatMoney")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatMoney"].ToString(), typeof(decimal));
-                //grid1[i + 1, GetIndexByName("iNatSum")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatSum"].ToString(), typeof(decimal));
 
-                
-                //grid1[i + 1, GetIndexByName("iTaxPrice")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTaxPrice"].ToString(), typeof(decimal));
-                //grid1[i + 1, GetIndexByName("iNatInvMoney")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatInvMoney"].ToString(), typeof(decimal));
-                //grid1[i + 1, GetIndexByName("iOriTotal")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal"].ToString(), typeof(decimal));
-                //grid1[i + 1, GetIndexByName("iTotal")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal"].ToString(), typeof(decimal));
+
+                grid1[i + 1, GetIndexByName("iOriSum")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriSum"].ToString(), typeof(decimal));
+                grid1[i + 1, GetIndexByName("iSum")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum"].ToString(), typeof(decimal));
+                grid1[i + 1, GetIndexByName("iOriTotal")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal"].ToString(), typeof(decimal));
+                grid1[i + 1, GetIndexByName("iTotal")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal"].ToString(), typeof(decimal));
 
 
                 
-                grid1[i + 1, GetIndexByName("dPBVDate")] = new SourceGrid.Cells.Cell(dt.Rows[i]["dPBVDate"].ToString(), typeof(string));
-                //grid1[i + 1, GetIndexByName("PayTerm")] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayTerm"].ToString(), typeof(string));
-                grid1[i + 1, GetIndexByName("PayDate")] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayDate"].ToString(), typeof(string));
-                //grid1[i + 1, GetIndexByName("cmaker")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaker"].ToString(), typeof(string));
                 grid1[i + 1, GetIndexByName("pbid")] = new SourceGrid.Cells.Cell(dt.Rows[i]["pbid"].ToString(), typeof(int));
 
-                // grid1[i+1, ++col] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPOID"].ToString(), typeof(string));
-                if (i == 0 || (i > 0 && !dt.Rows[i]["cPOID"].ToString().Equals(dt.Rows[i - 1]["cPOID"].ToString())))
-                {
-                    grid1[i + 1, GetIndexByName("cPOID")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPOID"].ToString(), typeof(string));
+                grid1[i + 1, GetIndexByName("cPOID")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPOID"].ToString(), typeof(string));
 
+                
+
+                // grid1[i+1, ++col] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPOID"].ToString(), typeof(string));
+                if (i == 0 || (i > 0 && !dt.Rows[i]["cPBVCode"].ToString().Equals(dt.Rows[i - 1]["cPBVCode"].ToString())))
+                {
+                    grid1[i + 1, GetIndexByName("cPBVCode")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cPBVCode"].ToString(), typeof(string));
+                    grid1[i + 1, GetIndexByName("dPBVDate")] = new SourceGrid.Cells.Cell(dt.Rows[i]["dPBVDate"].ToString(), typeof(string));
+                    grid1[i + 1, GetIndexByName("PayDate")] = new SourceGrid.Cells.Cell(dt.Rows[i]["PayDate"].ToString(), typeof(string));
+                
                     grid1[i + 1, GetIndexByName("cmaketime")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaketime"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("cVenName")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cVenName"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("cexch_name")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cexch_name"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("nflat")] = new SourceGrid.Cells.Cell(dt.Rows[i]["nflat"].ToString(), typeof(decimal));
-                    grid1[i + 1, GetIndexByName("iMoney_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iMoney_Total"].ToString(), typeof(decimal));
-                    grid1[i + 1, GetIndexByName("iSum_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum_Total"].ToString(), typeof(decimal));
-                    grid1[i + 1, GetIndexByName("iNatMoney_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatMoney_Total"].ToString(), typeof(decimal));
-                    grid1[i + 1, GetIndexByName("iNatSum_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatSum_Total"].ToString(), typeof(decimal));
 
-                    grid1[i + 1, GetIndexByName("iTaxPrice_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTaxPrice_Total"].ToString(), typeof(decimal));
-                    grid1[i + 1, GetIndexByName("iNatInvMoney_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatInvMoney_Total"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iOriSum_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriSum_Total"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iSum_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum_Total"].ToString(), typeof(decimal));
                     grid1[i + 1, GetIndexByName("iOriTotal_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal_Total"].ToString(), typeof(decimal));
                     grid1[i + 1, GetIndexByName("iTotal_Total")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal_Total"].ToString(), typeof(decimal));
                     grid1[i + 1, GetIndexByName("iTotal_Total")].View.TextAlignment = DevAge.Drawing.ContentAlignment.MiddleRight;
@@ -487,20 +474,17 @@ namespace Print
                     grid1[i + 1, GetIndexByName("cmaker")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cmaker"].ToString(), typeof(string));
                     if (cnt > 1)
                     {
-                        grid1[i + 1, GetIndexByName("cPOID")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("cPBVCode")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("dPBVDate")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("PayDate")].RowSpan = cnt;
+
                         grid1[i + 1, GetIndexByName("cmaketime")].RowSpan = cnt;
                         grid1[i + 1, GetIndexByName("cVenName")].RowSpan = cnt;
                         grid1[i + 1, GetIndexByName("cexch_name")].RowSpan = cnt;
                         grid1[i + 1, GetIndexByName("nflat")].RowSpan = cnt;
 
-
-                        grid1[i + 1, GetIndexByName("iMoney_Total")].RowSpan = cnt;
+                        grid1[i + 1, GetIndexByName("iOriSum_Total")].RowSpan = cnt;
                         grid1[i + 1, GetIndexByName("iSum_Total")].RowSpan = cnt;
-                        grid1[i + 1, GetIndexByName("iNatMoney_Total")].RowSpan = cnt;
-                        grid1[i + 1, GetIndexByName("iNatSum_Total")].RowSpan = cnt;
-
-                        grid1[i + 1, GetIndexByName("iTaxPrice_Total")].RowSpan = cnt;
-                        grid1[i + 1, GetIndexByName("iNatInvMoney_Total")].RowSpan = cnt;
                         grid1[i + 1, GetIndexByName("iOriTotal_Total")].RowSpan = cnt;
                         grid1[i + 1, GetIndexByName("iTotal_Total")].RowSpan = cnt;
                         grid1[i + 1, GetIndexByName("PayTerm")].RowSpan = cnt;
@@ -509,7 +493,7 @@ namespace Print
                     }
                 }
 
-                if (i == 0 || (i > 0 && ((!dt.Rows[i]["cPOID"].ToString().Equals(dt.Rows[i - 1]["cPOID"].ToString()))||(dt.Rows[i]["cPOID"].ToString().Equals(dt.Rows[i - 1]["cPOID"].ToString()) && !dt.Rows[i]["ivouchrowno"].ToString().Equals(dt.Rows[i - 1]["ivouchrowno"].ToString())))))
+                if (i == 0 || (i > 0 && ((!dt.Rows[i]["cPBVCode"].ToString().Equals(dt.Rows[i - 1]["cPBVCode"].ToString())) || (dt.Rows[i]["cPBVCode"].ToString().Equals(dt.Rows[i - 1]["cPBVCode"].ToString()) && !dt.Rows[i]["ivouchrowno"].ToString().Equals(dt.Rows[i - 1]["ivouchrowno"].ToString())))))
                 {
                     grid1[i + 1, GetIndexByName("cInvCode")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvCode"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("cInvName")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvName"].ToString(), typeof(string));
@@ -517,15 +501,12 @@ namespace Print
                     grid1[i + 1, GetIndexByName("cInvAddCode")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cInvAddCode"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("cComUnitName")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cComUnitName"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("iQuantity")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iQuantity"].ToString(), typeof(decimal));
-                    grid1[i + 1, GetIndexByName("iMoney")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iMoney"].ToString(), typeof(decimal));
-                    grid1[i + 1, GetIndexByName("iSum")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iSum"].ToString(), typeof(decimal));
-                    grid1[i + 1, GetIndexByName("iNatMoney")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatMoney"].ToString(), typeof(decimal));
-                    grid1[i + 1, GetIndexByName("iNatSum")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatSum"].ToString(), typeof(decimal));
 
-                    grid1[i + 1, GetIndexByName("iTaxPrice")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTaxPrice"].ToString(), typeof(decimal));
-                    grid1[i + 1, GetIndexByName("iNatInvMoney")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iNatInvMoney"].ToString(), typeof(decimal));
-                    grid1[i + 1, GetIndexByName("iOriTotal")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriTotal"].ToString(), typeof(decimal));
-                    grid1[i + 1, GetIndexByName("iTotal")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iTotal"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iOriPayBalance")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iOriPayBalance"].ToString(), typeof(decimal));
+                    grid1[i + 1, GetIndexByName("iPayBalance")] = new SourceGrid.Cells.Cell(dt.Rows[i]["iPayBalance"].ToString(), typeof(decimal));
+
+                    
+
                     grid1[i + 1, GetIndexByName("cbMemo")] = new SourceGrid.Cells.Cell(dt.Rows[i]["cbMemo"].ToString(), typeof(string));
                     grid1[i + 1, GetIndexByName("ivouchrowno")] = new SourceGrid.Cells.Cell(dt.Rows[i]["ivouchrowno"].ToString(), typeof(string));
                 
@@ -537,21 +518,35 @@ namespace Print
                         grid1[i + 1, GetIndexByName("cInvAddCode")].RowSpan = cnt_sub;
                         grid1[i + 1, GetIndexByName("cComUnitName")].RowSpan = cnt_sub;
                         grid1[i + 1, GetIndexByName("iQuantity")].RowSpan = cnt_sub;
-                        grid1[i + 1, GetIndexByName("iMoney")].RowSpan = cnt_sub;
-                        grid1[i + 1, GetIndexByName("iSum")].RowSpan = cnt_sub;
-                        grid1[i + 1, GetIndexByName("iNatMoney")].RowSpan = cnt_sub;
-                        grid1[i + 1, GetIndexByName("iNatSum")].RowSpan = cnt_sub;
-                        grid1[i + 1, GetIndexByName("iTaxPrice")].RowSpan = cnt_sub;
-                        grid1[i + 1, GetIndexByName("iNatInvMoney")].RowSpan = cnt_sub;
-                        grid1[i + 1, GetIndexByName("iOriTotal")].RowSpan = cnt_sub;
-                        grid1[i + 1, GetIndexByName("iTotal")].RowSpan = cnt_sub;
+
+                        grid1[i + 1, GetIndexByName("iOriPayBalance")].RowSpan = cnt_sub;
+                        grid1[i + 1, GetIndexByName("iPayBalance")].RowSpan = cnt_sub;
+
+                        
                         grid1[i + 1, GetIndexByName("cbMemo")].RowSpan = cnt_sub;
                         grid1[i + 1, GetIndexByName("ivouchrowno")].RowSpan = cnt_sub;
                     }
                 }
-
             }
-            grid1.Columns[GetIndexByName("pbid")].Visible = false;
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < grid1.Columns.Count;i++ )
+                    grid1[grid1.Rows.Count - 1, i] = new SourceGrid.Cells.Cell("", typeof(string));//最后合计行初始化
+                grid1[grid1.Rows.Count - 1, GetIndexByName("序号")] = new SourceGrid.Cells.Cell("合计", typeof(string));
+                grid1[grid1.Rows.Count - 1, GetIndexByName("iOriSum")] = new SourceGrid.Cells.Cell(dt.Rows[0]["iOriSum_all"].ToString(), typeof(decimal));
+                grid1[grid1.Rows.Count - 1, GetIndexByName("iSum")] = new SourceGrid.Cells.Cell(dt.Rows[0]["iSum_all"].ToString(), typeof(decimal));
+                grid1[grid1.Rows.Count - 1, GetIndexByName("iOriSum_Total")] = new SourceGrid.Cells.Cell(dt.Rows[0]["iOriSum_all"].ToString(), typeof(decimal));
+                grid1[grid1.Rows.Count - 1, GetIndexByName("iSum_Total")] = new SourceGrid.Cells.Cell(dt.Rows[0]["iSum_all"].ToString(), typeof(decimal));
+                grid1[grid1.Rows.Count - 1, GetIndexByName("iOriTotal")] = new SourceGrid.Cells.Cell(dt.Rows[0]["iOriTotal_all"].ToString(), typeof(decimal));
+                grid1[grid1.Rows.Count - 1, GetIndexByName("iTotal")] = new SourceGrid.Cells.Cell(dt.Rows[0]["iTotal_all"].ToString(), typeof(decimal));
+                grid1[grid1.Rows.Count - 1, GetIndexByName("iOriTotal_Total")] = new SourceGrid.Cells.Cell(dt.Rows[0]["iOriTotal_all"].ToString(), typeof(decimal));
+                grid1[grid1.Rows.Count - 1, GetIndexByName("iTotal_Total")] = new SourceGrid.Cells.Cell(dt.Rows[0]["iTotal_all"].ToString(), typeof(decimal));
+                grid1[grid1.Rows.Count - 1, GetIndexByName("iOriPayBalance")] = new SourceGrid.Cells.Cell(dt.Rows[0]["iOriPayBalance_all"].ToString(), typeof(decimal));
+                grid1[grid1.Rows.Count - 1, GetIndexByName("iPayBalance")] = new SourceGrid.Cells.Cell(dt.Rows[0]["iPayBalance_all"].ToString(), typeof(decimal));
+            }
+            grid1.Columns[GetIndexByName("pbid")].Visible = false;//采购订单子表ID不可见
+           // grid1.Columns[GetIndexByName("ivouchrowno")].Visible = false;//采购订单行号
+
             //grid1.AutoStretchColumnsToFitWidth = true; 
             //grid1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;// doesnot work
             grid1.Columns.AutoSize(true);
@@ -566,7 +561,7 @@ namespace Print
             {
                 //1 Header Row
                 SourceGrid.Cells.Views.ColumnHeader view = new SourceGrid.Cells.Views.ColumnHeader();
-                view.Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
+                view.Font = new System.Drawing.Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
                 view.TextAlignment = DevAge.Drawing.ContentAlignment.MiddleCenter;
                 View = view;
 
@@ -609,9 +604,7 @@ namespace Print
                 }
                 //if (cbSortField.SelectedIndex >= 0)
                 //    orderbystr = new StringBuilder("order by " + (cbSortField.SelectedItem as ComboxItem).Value);
-
                 if (cbVenType.SelectedIndex >= 0 && cbOper.SelectedIndex>= 0 && !tbVen.Text.Equals(""))
-                    //if (ucVen1.getSelectID() != null && ucVen2.getSelectID() != null)
                     condition.Append(" and " + getVenType(cbVenType.SelectedIndex) + getOperType(cbOper.SelectedIndex, tbVen.Text));
                 //付款日期
                 if (!dtp1.Text.Trim().Equals("") && !dtp2.Text.Trim().Equals(""))
@@ -628,23 +621,12 @@ namespace Print
                     condition.Append(" and PayTerm>='" + cbPayTerm1.Text + "' and PayTerm<='" + cbPayTerm2.Text + "' ");
                 if (!tbPoCode1.Text.Equals("") && !tbPocode2.Text.Equals(""))
                     condition.Append(" and cPOID>='" + tbPoCode1.Text + "' and cPOID<='" + tbPocode2.Text + "' ");
-
+                if (!tbInvoiceNO.Text.Equals(""))
+                    condition.Append(" and cPBVCode='"+tbInvoiceNO.Text+"'");
 
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("select row_number() over (" + orderbystr.ToString() + ") as 序号,count(1) over (partition by cPOID) as cnt,count(1) over (partition by cPOID,ivouchrowno) as cnt_sub,");
-
-                //sb.AppendLine("cast(sum(iMoney) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iMoney_Total,");
-                //sb.AppendLine("cast(sum(iSum) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iSum_Total,");
-                //sb.AppendLine("cast(sum(iNatMoney) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iNatMoney_Total,");
-                //sb.AppendLine("cast(sum(iNatSum) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iNatSum_Total,");
-
-                //sb.AppendLine("cast(sum(iTaxPrice) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iTaxPrice_Total,");
-                //sb.AppendLine("cast(sum(iNatInvMoney) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iNatInvMoney_Total,");
-                //sb.AppendLine("cast(sum(iOriTotal) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iOriTotal_Total,");
-                //sb.AppendLine("cast(sum(iTotal) over (" + groupbystr.ToString() + ")  as decimal(18,2)) as iTotal_Total,");
-
-                sb.AppendLine("t.* from Myview t ");
-                sb.AppendLine("where isnull(iTotal,0)<isnull(iNatInvMoney,0) ");
+                sb.AppendLine(" t.* from Myview t where isnull(iTotal,0)<isnull(iSum,0) ");
               //  sb.AppendLine("where 1=1 ");
                 sb.AppendLine(condition.ToString());
                 sb.AppendLine(" " + orderbystr.ToString());
@@ -712,32 +694,32 @@ namespace Print
 
 
 
-        private void MergeCells(int RowId1, int RowId2, int Column, bool isSelected, DataGridView dataGrid)
-        {
-            Graphics g = dataGrid.CreateGraphics();
-            Pen gridPen = new Pen(dataGrid.GridColor);
+        //private void MergeCells(int RowId1, int RowId2, int Column, bool isSelected, DataGridView dataGrid)
+        //{
+        //    Graphics g = dataGrid.CreateGraphics();
+        //    Pen gridPen = new Pen(dataGrid.GridColor);
 
 
-            //Cells Rectangles
-            Rectangle CellRectangle1 = dataGrid.GetCellDisplayRectangle(Column, RowId1, true);
-            Rectangle CellRectangle2 = dataGrid.GetCellDisplayRectangle(Column, RowId2, true);
+        //    //Cells Rectangles
+        //    Rectangle CellRectangle1 = dataGrid.GetCellDisplayRectangle(Column, RowId1, true);
+        //    Rectangle CellRectangle2 = dataGrid.GetCellDisplayRectangle(Column, RowId2, true);
 
-            int rectHeight = 0;
-            string MergedRows = String.Empty;
+        //    int rectHeight = 0;
+        //    string MergedRows = String.Empty;
 
-            for (int i = RowId1; i <= RowId2; i++)
-            {
-                rectHeight += dataGrid.GetCellDisplayRectangle(Column, i, false).Height;
-            }
+        //    for (int i = RowId1; i <= RowId2; i++)
+        //    {
+        //        rectHeight += dataGrid.GetCellDisplayRectangle(Column, i, false).Height;
+        //    }
 
-            Rectangle newCell = new Rectangle(CellRectangle1.X, CellRectangle1.Y, CellRectangle1.Width, rectHeight);
+        //    Rectangle newCell = new Rectangle(CellRectangle1.X, CellRectangle1.Y, CellRectangle1.Width, rectHeight);
 
-            g.FillRectangle(new SolidBrush(isSelected ? dataGrid.DefaultCellStyle.SelectionBackColor : dataGrid.DefaultCellStyle.BackColor), newCell);
+        //    g.FillRectangle(new SolidBrush(isSelected ? dataGrid.DefaultCellStyle.SelectionBackColor : dataGrid.DefaultCellStyle.BackColor), newCell);
 
-            g.DrawRectangle(gridPen, newCell);
+        //    g.DrawRectangle(gridPen, newCell);
 
-            g.DrawString(dataGrid.Rows[RowId1].Cells[Column].Value.ToString(), dataGrid.DefaultCellStyle.Font, new SolidBrush(isSelected ? dataGrid.DefaultCellStyle.SelectionForeColor : dataGrid.DefaultCellStyle.ForeColor), newCell.X + 0 * newCell.Width / 3, newCell.Y + newCell.Height / 3);
-        }
+        //    g.DrawString(dataGrid.Rows[RowId1].Cells[Column].Value.ToString(), dataGrid.DefaultCellStyle.Font, new SolidBrush(isSelected ? dataGrid.DefaultCellStyle.SelectionForeColor : dataGrid.DefaultCellStyle.ForeColor), newCell.X + 0 * newCell.Width / 3, newCell.Y + newCell.Height / 3);
+        //}
 
         private void dvResult_Paint(object sender, PaintEventArgs e)
         {
@@ -767,27 +749,144 @@ namespace Print
 
         private void btPrint_Click(object sender, EventArgs e)
         {
+
             try
             {
+                if (grid1.Rows.Count <= 1) 
+                    return;
+                //PrintExcel();
+                //return;
                 SaveFileDialog sfd = new SaveFileDialog();
-                sfd.Filter = "Excel(*.csv)|*.csv";
+                sfd.Filter = "Excel文件(*.xls)|*.xls";//|Excel 2007(*.xlsx)|*.xlsx
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    using (System.IO.StreamWriter writer = new System.IO.StreamWriter(sfd.FileName, false, System.Text.Encoding.Default))
-                    {
-                        SourceGrid.Exporter.CSV csv = new SourceGrid.Exporter.CSV();
-                        csv.Export(grid1, writer);
-                        writer.Close();
-                    }
-                    DevAge.Shell.Utilities.OpenFile(sfd.FileName);
+                    SaveExcel(sfd.FileName);
+                        
+                    //using (System.IO.StreamWriter writer = new System.IO.StreamWriter(sfd.FileName, false, System.Text.Encoding.Default))
+                    //{
+                    //    SourceGrid.Exporter.CSV csv = new SourceGrid.Exporter.CSV();
+                    //    csv.Export(grid1, writer);
+                    //    writer.Close();
+                    //}
+                    //DevAge.Shell.Utilities.OpenFile(sfd.FileName);
                 }
             }
             catch (Exception err)
             {
-                DevAge.Windows.Forms.ErrorDialog.Show(this, err, "CSV文件导出错误");
+                DevAge.Windows.Forms.ErrorDialog.Show(this, err, "Excel文件导出错误");
             }
-
         }
+
+        protected void SaveExcel(string excelfile)
+        {
+            Microsoft.Office.Interop.Excel.Application app = new Microsoft.Office.Interop.Excel.Application();
+            //加载模板  
+            Workbook workbook = app.Workbooks.Add(XlWBATemplate.xlWBATWorksheet);
+            try
+            {
+                //获取模板中第一个sheet页  
+                Worksheet worksheet = (Worksheet)workbook.Worksheets[1];
+                int rowspan = 1;
+                int realcolumn;
+                Excel.Range range = null;
+                for (int i = 0; i < grid1.Rows.Count; i++)
+                {
+                    //for (int j = 5; j < 6; j++)
+                    realcolumn = 0;
+                    for (int column = 0; column < grid1.Columns.Count; column++)
+                    {
+                       // realcolumn = column;
+                        if (grid1.Columns[column].Visible == false)
+                            continue;
+                        rowspan = grid1[i, column].RowSpan;
+                        //            rg1.MergeCells = true;
+                        //rg1.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                        //rg1.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter
+                        if (rowspan > 1)
+                        {
+                            object s = ((Excel.Range)((Excel.Range)worksheet.Cells[i + 1, realcolumn + 1]).MergeArea[1, 1]).Value2;
+                            if (s == null)
+                            {
+                                range = worksheet.get_Range(worksheet.Cells[i + 1, realcolumn + 1], worksheet.Cells[i + 1 + rowspan - 1, realcolumn + 1]);
+                                range.MergeCells = true;
+                                worksheet.Cells[i + 1, realcolumn + 1] = grid1[i, column].Value;
+                            }
+                        }
+                        else
+                        {
+                            //SourceGrid.Cells.Views.ColumnHeader view = new SourceGrid.Cells.Views.ColumnHeader();
+                            //view.Font = new System.Drawing.Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
+                            //view.TextAlignment = DevAge.Drawing.ContentAlignment.MiddleCenter;
+
+                            if (grid1[i, column].GetType().Name.Equals("MyHeader"))
+                            {
+                                range = worksheet.get_Range(worksheet.Cells[i + 1, realcolumn + 1], worksheet.Cells[i + 1, realcolumn + 1]);
+                                range.Font.Bold = true;
+                            }
+                            //worksheet.get_Range("A1", "C3").Font.Name = "Times New Roman";//设置字体.  
+                            //worksheet.get_Range("A1", "C3").Font.Size = 22;//设置字体大小  
+                            //range.Font.Bold = true;//加粗  
+                            //range.RowHeight = 22;//调行高
+                            worksheet.Cells[i + 1, realcolumn + 1] = grid1[i, column].Value;
+                        }
+                        realcolumn++;
+                    }
+                }
+
+                //利用公式计算满足某条街的总和，单独分出3是为了可以在程序中替换该值  
+                //worksheet.Cells[2, 4] = "=COUNTIF(C2:C" + 3 + ",\"男\")";
+                //worksheet.get_Range("A1", "A3").MergeCells = true; //合并单元格
+
+                ////在结尾添加一特殊行，插入值  
+                //Microsoft.Office.Interop.Excel.Range range = worksheet.get_Range(worksheet.Cells[4, 1], worksheet.Cells[4, 2]);
+                ////合并单元格  
+                //range.Merge(0);
+                ////设置单元格文字对齐方式  
+                //range.HorizontalAlignment = XlHAlign.xlHAlignRight;
+                //range.Cells[1, 1] = "Hello";
+                //worksheet.Cells[4, 3] = "0";
+                ////设置单元格背景色  
+                //range = worksheet.Cells[4, 3] as Microsoft.Office.Interop.Excel.Range;
+                //range.Interior.Color = System.Drawing.Color.LightSeaGreen;
+
+
+                //画边框  
+                //range = worksheet.get_Range(worksheet.Cells[4, 1], worksheet.Cells[4, 3]);
+                //range.Borders.get_Item(XlBordersIndex.xlEdgeTop).LineStyle = XlLineStyle.xlContinuous;
+
+                //range = worksheet.get_Range(worksheet.Cells[2, 2], worksheet.Cells[3, 2]);
+                //range.Borders.get_Item(XlBordersIndex.xlEdgeRight).LineStyle = XlLineStyle.xlContinuous;
+
+                //保存  
+                string Version = app.Version;//
+                int FormatNum;//保存excel文件的格式
+                if (Convert.ToDouble(Version) < 12)//You use Excel 97-2003
+                {
+                    FormatNum = -4143;
+                }
+                else//you use excel 2007 or later
+                {
+                    FormatNum = 56;
+                }
+                workbook.SaveAs(excelfile, FormatNum);
+
+                //workbook.SaveAs(excelfile,
+                //Missing.Value, Missing.Value, Missing.Value, Missing.Value,
+                //Missing.Value, XlSaveAsAccessMode.xlNoChange, Missing.Value,
+                //Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+                DevAge.Shell.Utilities.OpenFile(excelfile);
+            }
+            finally
+            {
+                //资源清理
+                workbook.Close();
+                app.Workbooks.Close();
+                app.Quit();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+                MessageBox.Show("导出成功", "提示");
+            }
+        }  
 
         private void btSave_Click(object sender, EventArgs e)
         {

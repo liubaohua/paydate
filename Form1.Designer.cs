@@ -54,15 +54,17 @@ namespace Print
             this.tbPoCode1 = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.grid1 = new SourceGrid.Grid();
+            this.label6 = new System.Windows.Forms.Label();
+            this.tbInvoiceNO = new System.Windows.Forms.TextBox();
             this.dpt6 = new Print.FlatDateTimePicker();
             this.dpt4 = new Print.FlatDateTimePicker();
             this.dpt5 = new Print.FlatDateTimePicker();
-            this.label1 = new System.Windows.Forms.Label();
             this.dpt3 = new Print.FlatDateTimePicker();
             this.dtp2 = new Print.FlatDateTimePicker();
             this.dtp1 = new Print.FlatDateTimePicker();
-            this.button1 = new System.Windows.Forms.Button();
-            this.grid1 = new SourceGrid.Grid();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -84,9 +86,11 @@ namespace Print
             this.panel1.Controls.Add(this.label12);
             this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.tbInvoiceNO);
             this.panel1.Controls.Add(this.tbPocode2);
             this.panel1.Controls.Add(this.tbVen);
             this.panel1.Controls.Add(this.tbPoCode1);
@@ -156,7 +160,7 @@ namespace Print
             // cbSave
             // 
             this.cbSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbSave.Location = new System.Drawing.Point(1143, 18);
+            this.cbSave.Location = new System.Drawing.Point(1289, 18);
             this.cbSave.Name = "cbSave";
             this.cbSave.Size = new System.Drawing.Size(75, 34);
             this.cbSave.TabIndex = 5;
@@ -167,7 +171,7 @@ namespace Print
             // btnPrint
             // 
             this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPrint.Location = new System.Drawing.Point(1035, 18);
+            this.btnPrint.Location = new System.Drawing.Point(1181, 18);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(75, 34);
             this.btnPrint.TabIndex = 5;
@@ -178,7 +182,7 @@ namespace Print
             // btQry
             // 
             this.btQry.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btQry.Location = new System.Drawing.Point(921, 18);
+            this.btQry.Location = new System.Drawing.Point(1067, 18);
             this.btQry.Name = "btQry";
             this.btQry.Size = new System.Drawing.Size(75, 34);
             this.btQry.TabIndex = 5;
@@ -297,6 +301,54 @@ namespace Print
             this.label9.TabIndex = 8;
             this.label9.Text = "订单日期";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 12);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "付款期间";
+            // 
+            // button1
+            // 
+            this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button1.Location = new System.Drawing.Point(0, 476);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(1604, 23);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // grid1
+            // 
+            this.grid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grid1.EnableSort = true;
+            this.grid1.Location = new System.Drawing.Point(0, 79);
+            this.grid1.Name = "grid1";
+            this.grid1.OptimizeMode = SourceGrid.CellOptimizeMode.ForRows;
+            this.grid1.SelectionMode = SourceGrid.GridSelectionMode.Cell;
+            this.grid1.Size = new System.Drawing.Size(1604, 420);
+            this.grid1.TabIndex = 0;
+            this.grid1.TabStop = true;
+            this.grid1.ToolTipText = "";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(942, 15);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(41, 12);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "发票号";
+            // 
+            // tbInvoiceNO
+            // 
+            this.tbInvoiceNO.Location = new System.Drawing.Point(915, 34);
+            this.tbInvoiceNO.Name = "tbInvoiceNO";
+            this.tbInvoiceNO.Size = new System.Drawing.Size(114, 21);
+            this.tbInvoiceNO.TabIndex = 10;
+            // 
             // dpt6
             // 
             this.dpt6.CustomFormat = "yyyy-MM-dd";
@@ -324,15 +376,6 @@ namespace Print
             this.dpt5.Size = new System.Drawing.Size(105, 21);
             this.dpt5.TabIndex = 7;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 12);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "付款期间";
-            // 
             // dpt3
             // 
             this.dpt3.CustomFormat = "yyyy-MM-dd";
@@ -359,29 +402,6 @@ namespace Print
             this.dtp1.Name = "dtp1";
             this.dtp1.Size = new System.Drawing.Size(81, 21);
             this.dtp1.TabIndex = 7;
-            // 
-            // button1
-            // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button1.Location = new System.Drawing.Point(0, 476);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(1604, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // grid1
-            // 
-            this.grid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grid1.EnableSort = true;
-            this.grid1.Location = new System.Drawing.Point(0, 79);
-            this.grid1.Name = "grid1";
-            this.grid1.OptimizeMode = SourceGrid.CellOptimizeMode.ForRows;
-            this.grid1.SelectionMode = SourceGrid.GridSelectionMode.Cell;
-            this.grid1.Size = new System.Drawing.Size(1604, 420);
-            this.grid1.TabIndex = 0;
-            this.grid1.TabStop = true;
-            this.grid1.ToolTipText = "";
             // 
             // Form1
             // 
@@ -448,6 +468,8 @@ namespace Print
         private ComboBox cbVenType;
         private TextBox tbVen;
         private Button cbSave;
+        private Label label6;
+        private TextBox tbInvoiceNO;
 
     }
 }
